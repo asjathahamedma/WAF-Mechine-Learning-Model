@@ -1,0 +1,5 @@
+http://evil.com
+https://evil.com
+//evil.com
+///evil.com
+https://attacker.com

@@ -1,0 +1,819 @@
+﻿@model SmartEventMVC.Models.Booking
+
+@{
+    ViewData["Title"] = "Select Seats";
+    var evt = ViewBag.Event as SmartEventMVC.Models.Event;
+    var allSeats = ViewBag.AllSeats as List<SmartEventMVC.Models.Seat>;
+    var bookedSeatIds = ViewBag.BookedSeatIds as List<int> ?? new List<int>();
+    var seatTypePrices = ViewBag.SeatTypePrices as Dictionary<string, decimal> ?? new Dictionary<string, decimal>();
+    var minPrice = ViewBag.MinPrice as decimal? ?? 0;
+    var maxPrice = ViewBag.MaxPrice as decimal? ?? 0;
+
+    // Group seats by type and row
+    var vipSeats = allSeats?.Where(s => s.SeatType == "VIP").OrderBy(s => s.SeatNumber).ToList();
+    var regularSeats = allSeats?.Where(s => s.SeatType == "Regular").OrderBy(s => s.SeatNumber).ToList();
+    var standardSeats = allSeats?.Where(s => s.SeatType == "Standard").OrderBy(s => s.SeatNumber).ToList();
+    var premiumSeats = allSeats?.Where(s => s.SeatType == "Premium").OrderBy(s => s.SeatNumber).ToList();
+    var generalSeats = allSeats?.Where(s => s.SeatType == "General").OrderBy(s => s.SeatNumber).ToList();
+}
+
+<div class="container mt-5">
+    <h2>Select Seats for @evt?.Title</h2>
+
+    <!-- Price Range Display -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="price-range-card p-3 bg-white rounded shadow-sm">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-tags-fill text-primary"></i>
+                        <strong class="ms-2 text-black-50">Price Range:</strong>
+                        <span class="ms-2 text-black-50">
+                            LKR @minPrice.ToString("N2") - LKR @maxPrice.ToString("N2")
+                        </span>
+                    </div>
+                    <div>
+                        <span class="badge bg-info text-dark">
+                            <i class="bi bi-info-circle"></i> Prices vary by seat type
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form asp-action="SelectSeats" method="post">
+        <input type="hidden" name="eventId" value="@ViewBag.EventId" />
+
+        @if (allSeats == null || !allSeats.Any())
+        {
+            <div class="alert alert-warning">No seats available for this event.</div>
+        }
+        else
+        {
+            <!-- Theater Layout -->
+            <div class="theater-layout mb-5">
+
+                <!-- Stage -->
+                <div class="text-center mb-5">
+                    <div class="stage bg-dark text-white py-4 rounded">
+                        <h4 class="mb-0"><i class="bi bi-mic-fill"></i> STAGE</h4>
+                        <small class="text-light">Performance Area</small>
+                    </div>
+                </div>
+
+                <!-- Steps Indicator with Prices -->
+                <div class="row justify-content-center mb-4">
+                    <div class="col-md-10">
+                        <div class="steps-indicator p-3 bg-white rounded shadow-sm">
+                            <div class="row text-center">
+                                @if (vipSeats?.Any() == true)
+                                {
+                                    <div class="col">
+                                        <div class="step-box vip-step text-black-50">
+                                            <div class="step-label"><strong>VIP</strong></div>
+                                            <small>LKR @seatTypePrices.GetValueOrDefault("VIP", 0).ToString("N2")</small>
+                                        </div>
+                                    </div>
+                                }
+                                @if (premiumSeats?.Any() == true)
+                                {
+                                    <div class="col">
+                                        <div class="step-box premium-step text-black-50">
+                                            <div class="step-label"><strong>PREMIUM</strong></div>
+                                            <small>LKR @seatTypePrices.GetValueOrDefault("Premium", 0).ToString("N2")</small>
+                                        </div>
+                                    </div>
+                                }
+                                @if (regularSeats?.Any() == true)
+                                {
+                                    <div class="col">
+                                        <div class="step-box regular-step text-black-50">
+                                            <div class="step-label"><strong>REGULAR</strong></div>
+                                            <small>LKR @seatTypePrices.GetValueOrDefault("Regular", 0).ToString("N2")</small>
+                                        </div>
+                                    </div>
+                                }
+                                @if (standardSeats?.Any() == true)
+                                {
+                                    <div class="col">
+                                        <div class="step-box standard-step text-black-50">
+                                            <div class="step-label"><strong>STANDARD</strong></div>
+                                            <small>LKR @seatTypePrices.GetValueOrDefault("Standard", 0).ToString("N2")</small>
+                                        </div>
+                                    </div>
+                                }
+                                @if (generalSeats?.Any() == true)
+                                {
+                                    <div class="col">
+                                        <div class="step-box general-step text-black-50">
+                                            <div class="step-label"><strong>GENERAL</strong></div>
+                                            <small>LKR @seatTypePrices.GetValueOrDefault("General", 0).ToString("N2")</small>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seat Legend -->
+                <div class="row justify-content-center mb-4">
+                    <div class="col-md-8">
+                        <div class="seat-legend">
+                            <div class="legend-item">
+                                <div class="legend-color available"></div>
+                                <span>Available</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color booked"></div>
+                                <span>Booked</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color selected"></div>
+                                <span>Selected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIP Seats Section -->
+                @if (vipSeats != null && vipSeats.Any())
+                {
+                    <div class="seat-section vip-section mb-4">
+                        <h5 class="section-title text-center mb-3">
+                            <i class="bi bi-star-fill text-warning"></i> VIP Section
+                            <span class="badge bg-warning text-dark ms-2">
+                                LKR @seatTypePrices.GetValueOrDefault("VIP", 0).ToString("N2")
+                            </span>
+                        </h5>
+                        <div class="row justify-content-center">
+                            @foreach (var seat in vipSeats)
+                            {
+                                var isBooked = bookedSeatIds.Contains(seat.SeatId);
+                                <div class="col-auto mb-3">
+                                    <div class="seat-card vip-seat @(isBooked ? "booked" : "")">
+                                        @if (!isBooked)
+                                        {
+                                            <input class="form-check-input seat-checkbox d-none"
+                                                   type="checkbox"
+                                                   name="selectedSeatIds"
+                                                   value="@seat.SeatId"
+                                                   id="seat_@seat.SeatId"
+                                                   data-price="@seat.Price"
+                                                   data-seatnumber="@seat.SeatNumber"
+                                                   data-seattype="@seat.SeatType" />
+                                            <label class="seat-label vip-label" for="seat_@seat.SeatId">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">VIP</div>
+                                                    <div class="seat-price">LKR @seat.Price.ToString("N2")</div>
+                                                </div>
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <div class="seat-label vip-label booked-seat">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">VIP</div>
+                                                    <div class="seat-price text-danger">
+                                                        <i class="bi bi-lock-fill"></i> BOOKED
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Premium Seats Section -->
+                @if (premiumSeats != null && premiumSeats.Any())
+                {
+                    <div class="seat-section premium-section mb-4">
+                        <h5 class="section-title text-center mb-3">
+                            <i class="bi bi-gem-fill text-info"></i> Premium Section
+                            <span class="badge bg-info text-dark ms-2">
+                                LKR @seatTypePrices.GetValueOrDefault("Premium", 0).ToString("N2")
+                            </span>
+                        </h5>
+                        <div class="row justify-content-center">
+                            @foreach (var seat in premiumSeats)
+                            {
+                                var isBooked = bookedSeatIds.Contains(seat.SeatId);
+                                <div class="col-auto mb-3">
+                                    <div class="seat-card premium-seat @(isBooked ? "booked" : "")">
+                                        @if (!isBooked)
+                                        {
+                                            <input class="form-check-input seat-checkbox d-none"
+                                                   type="checkbox"
+                                                   name="selectedSeatIds"
+                                                   value="@seat.SeatId"
+                                                   id="seat_@seat.SeatId"
+                                                   data-price="@seat.Price"
+                                                   data-seatnumber="@seat.SeatNumber"
+                                                   data-seattype="@seat.SeatType" />
+                                            <label class="seat-label premium-label" for="seat_@seat.SeatId">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">Premium</div>
+                                                    <div class="seat-price">LKR @seat.Price.ToString("N2")</div>
+                                                </div>
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <div class="seat-label premium-label booked-seat">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">Premium</div>
+                                                    <div class="seat-price text-danger">
+                                                        <i class="bi bi-lock-fill"></i> BOOKED
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Regular Seats Section -->
+                @if (regularSeats != null && regularSeats.Any())
+                {
+                    <div class="seat-section regular-section mb-4">
+                        <h5 class="section-title text-center mb-3">
+                            <i class="bi bi-person-fill text-primary"></i> Regular Section
+                            <span class="badge bg-primary text-white ms-2">
+                                LKR @seatTypePrices.GetValueOrDefault("Regular", 0).ToString("N2")
+                            </span>
+                        </h5>
+                        <div class="row justify-content-center">
+                            @foreach (var seat in regularSeats)
+                            {
+                                var isBooked = bookedSeatIds.Contains(seat.SeatId);
+                                <div class="col-auto mb-3">
+                                    <div class="seat-card regular-seat @(isBooked ? "booked" : "")">
+                                        @if (!isBooked)
+                                        {
+                                            <input class="form-check-input seat-checkbox d-none"
+                                                   type="checkbox"
+                                                   name="selectedSeatIds"
+                                                   value="@seat.SeatId"
+                                                   id="seat_@seat.SeatId"
+                                                   data-price="@seat.Price"
+                                                   data-seatnumber="@seat.SeatNumber"
+                                                   data-seattype="@seat.SeatType" />
+                                            <label class="seat-label regular-label" for="seat_@seat.SeatId">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">Regular</div>
+                                                    <div class="seat-price">LKR @seat.Price.ToString("N2")</div>
+                                                </div>
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <div class="seat-label regular-label booked-seat">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">Regular</div>
+                                                    <div class="seat-price text-danger">
+                                                        <i class="bi bi-lock-fill"></i> BOOKED
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Standard Seats Section -->
+                @if (standardSeats != null && standardSeats.Any())
+                {
+                    <div class="seat-section standard-section mb-4">
+                        <h5 class="section-title text-center mb-3">
+                            <i class="bi bi-people-fill text-success"></i> Standard Section
+                            <span class="badge bg-success text-white ms-2">
+                                LKR @seatTypePrices.GetValueOrDefault("Standard", 0).ToString("N2")
+                            </span>
+                        </h5>
+                        <div class="row justify-content-center">
+                            @foreach (var seat in standardSeats)
+                            {
+                                var isBooked = bookedSeatIds.Contains(seat.SeatId);
+                                <div class="col-auto mb-3">
+                                    <div class="seat-card standard-seat @(isBooked ? "booked" : "")">
+                                        @if (!isBooked)
+                                        {
+                                            <input class="form-check-input seat-checkbox d-none"
+                                                   type="checkbox"
+                                                   name="selectedSeatIds"
+                                                   value="@seat.SeatId"
+                                                   id="seat_@seat.SeatId"
+                                                   data-price="@seat.Price"
+                                                   data-seatnumber="@seat.SeatNumber"
+                                                   data-seattype="@seat.SeatType" />
+                                            <label class="seat-label standard-label" for="seat_@seat.SeatId">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">Standard</div>
+                                                    <div class="seat-price">LKR @seat.Price.ToString("N2")</div>
+                                                </div>
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <div class="seat-label standard-label booked-seat">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">Standard</div>
+                                                    <div class="seat-price text-danger">
+                                                        <i class="bi bi-lock-fill"></i> BOOKED
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- General Seats Section -->
+                @if (generalSeats != null && generalSeats.Any())
+                {
+                    <div class="seat-section general-section mb-4">
+                        <h5 class="section-title text-center mb-3">
+                            <i class="bi bi-ticket-fill text-secondary"></i> General Section
+                            <span class="badge bg-secondary text-white ms-2">
+                                LKR @seatTypePrices.GetValueOrDefault("General", 0).ToString("N2")
+                            </span>
+                        </h5>
+                        <div class="row justify-content-center">
+                            @foreach (var seat in generalSeats)
+                            {
+                                var isBooked = bookedSeatIds.Contains(seat.SeatId);
+                                <div class="col-auto mb-3">
+                                    <div class="seat-card general-seat @(isBooked ? "booked" : "")">
+                                        @if (!isBooked)
+                                        {
+                                            <input class="form-check-input seat-checkbox d-none"
+                                                   type="checkbox"
+                                                   name="selectedSeatIds"
+                                                   value="@seat.SeatId"
+                                                   id="seat_@seat.SeatId"
+                                                   data-price="@seat.Price"
+                                                   data-seatnumber="@seat.SeatNumber"
+                                                   data-seattype="@seat.SeatType" />
+                                            <label class="seat-label general-label" for="seat_@seat.SeatId">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">General</div>
+                                                    <div class="seat-price">LKR @seat.Price.ToString("N2")</div>
+                                                </div>
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <div class="seat-label general-label booked-seat">
+                                                <div class="seat-content">
+                                                    <div class="seat-number">@seat.SeatNumber</div>
+                                                    <div class="seat-type">General</div>
+                                                    <div class="seat-price text-danger">
+                                                        <i class="bi bi-lock-fill"></i> BOOKED
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Exit Signs -->
+                <div class="row mt-4">
+                    <div class="col text-start">
+                        <div class="exit-sign bg-danger text-white p-2 rounded">
+                            <i class="bi bi-door-closed"></i> EXIT
+                        </div>
+                    </div>
+                    <div class="col text-end">
+                        <div class="exit-sign bg-danger text-white p-2 rounded">
+                            EXIT <i class="bi bi-door-closed"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selection Summary and Payment -->
+            <div class="booking-summary p-4 bg-light rounded shadow-sm">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>Selected Seats:</h5>
+                        <div id="selectedSeatsList" class="selected-seats-container">
+                            <span class="text-muted">No seats selected yet</span>
+                        </div>
+                        <div id="priceBreakdown" class="mt-3 small text-muted"></div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div id="totalPrice" class="total-amount h3 mb-3">
+                            Total: LKR 0.00
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg px-5">
+                            <i class="bi bi-credit-card-fill"></i> Proceed to Payment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </form>
+</div>
+
+<style>
+
+    /* ================================
+       PAGE BACKGROUND (CINEMA MODE)
+    ================================ */
+
+    body {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #f1f5f9;
+    }
+
+
+    /* ================================
+       MAIN CONTAINER
+    ================================ */
+
+    .theater-layout {
+        background: #0b1220;
+        padding: 35px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+
+    /* ================================
+       STAGE
+    ================================ */
+
+    .stage {
+        width: 55%;
+        margin: auto;
+        border-radius: 60px;
+        background: linear-gradient(145deg, #111827, #1f2937);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.7), inset 0 -4px 8px rgba(255,255,255,0.05);
+        letter-spacing: 3px;
+        font-weight: 600;
+    }
+
+
+    /* ================================
+       SECTION TITLES
+    ================================ */
+
+    .section-title {
+        font-weight: 600;
+        color: #e2e8f0;
+    }
+
+
+    /* ================================
+       BASE SEAT STYLE
+    ================================ */
+
+    .seat-label {
+        display: block;
+        width: 78px;
+        height: 78px;
+        border-radius: 16px;
+        border: 2px solid rgba(255,255,255,0.15);
+        background: #1e293b;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+        cursor: pointer;
+        transition: all 0.25s ease;
+        padding-top: 6px;
+        text-align: center;
+        color: #f8fafc;
+    }
+
+
+    /* ================================
+       TEXT INSIDE SEATS
+    ================================ */
+
+    .seat-number {
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .seat-type {
+        font-size: 11px;
+        opacity: 0.85;
+    }
+
+    .seat-price {
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+
+    /* ================================
+       HOVER EFFECT
+    ================================ */
+
+    .seat-checkbox:not(:disabled) + .seat-label:hover {
+        transform: translateY(-6px) scale(1.05);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.8), 0 0 15px rgba(255,255,255,0.15);
+    }
+
+
+    /* ================================
+       SELECTED SEAT
+    ================================ */
+
+    .seat-checkbox:checked + .seat-label {
+        background: linear-gradient(135deg, #2563eb, #60a5fa);
+        border-color: #3b82f6;
+        color: white;
+        transform: scale(1.08);
+        box-shadow: 0 0 20px rgba(37,99,235,0.9), 0 0 40px rgba(37,99,235,0.4);
+    }
+
+
+    /* ================================
+       BOOKED SEAT
+    ================================ */
+
+    .seat-card.booked .seat-label {
+        background: #3f3f46;
+        border: 2px solid #ef4444;
+        color: #f87171;
+        cursor: not-allowed;
+        box-shadow: inset 0 0 12px rgba(0,0,0,0.7);
+    }
+
+
+    /* ================================
+       VIP
+    ================================ */
+
+    .vip-label {
+        border-color: #facc15;
+        background: #422006;
+    }
+
+    .seat-checkbox:checked + .vip-label {
+        background: linear-gradient(135deg, #facc15, #fde047);
+        color: #3f2f00;
+    }
+
+
+    /* ================================
+       PREMIUM
+    ================================ */
+
+    .premium-label {
+        border-color: #06b6d4;
+        background: #083344;
+    }
+
+    .seat-checkbox:checked + .premium-label {
+        background: linear-gradient(135deg, #06b6d4, #67e8f9);
+        color: #00313a;
+    }
+
+
+    /* ================================
+       REGULAR
+    ================================ */
+
+    .regular-label {
+        border-color: #3b82f6;
+        background: #0c2d5c;
+    }
+
+    .seat-checkbox:checked + .regular-label {
+        background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    }
+
+
+    /* ================================
+       STANDARD
+    ================================ */
+
+    .standard-label {
+        border-color: #22c55e;
+        background: #052e16;
+    }
+
+    .seat-checkbox:checked + .standard-label {
+        background: linear-gradient(135deg, #22c55e, #4ade80);
+    }
+
+
+    /* ================================
+       GENERAL
+    ================================ */
+
+    .general-label {
+        border-color: #a855f7;
+        background: #2e1065;
+    }
+
+    .seat-checkbox:checked + .general-label {
+        background: linear-gradient(135deg, #a855f7, #d8b4fe);
+    }
+
+
+    /* ================================
+       LEGEND
+    ================================ */
+
+    .seat-legend {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        padding: 14px;
+        background: #111827;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .legend-color {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+    }
+
+        .legend-color.available {
+            background: #1e293b;
+            border: 2px solid #64748b;
+        }
+
+        .legend-color.booked {
+            background: #3f3f46;
+            border: 2px solid #ef4444;
+        }
+
+        .legend-color.selected {
+            background: #2563eb;
+        }
+
+
+    /* ================================
+       SUMMARY BOX
+    ================================ */
+
+    .booking-summary {
+        background: #111827;
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #f8fafc;
+    }
+
+
+    /* ================================
+       SELECTED TAG
+    ================================ */
+
+    .selected-seat-item {
+        display: inline-block;
+        background: #2563eb;
+        padding: 6px 12px;
+        border-radius: 8px;
+        margin: 4px;
+        font-size: 13px;
+        box-shadow: 0 0 8px rgba(37,99,235,0.6);
+    }
+
+
+    /* ================================
+       EXIT BUTTONS
+    ================================ */
+
+    .exit-sign {
+        font-weight: bold;
+        box-shadow: 0 5px 15px rgba(239,68,68,0.5);
+    }
+
+</style>
+
+
+
+<script>
+    let totalAmount = 0;
+    const checkboxes = document.querySelectorAll('input[name="selectedSeatIds"]');
+    const totalDisplay = document.getElementById('totalPrice');
+    const selectedSeatsList = document.getElementById('selectedSeatsList');
+    const priceBreakdown = document.getElementById('priceBreakdown');
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', function() {
+            updateTotal();
+            updateSelectedSeatsList();
+            updateSeatVisualState(this);
+        });
+    });
+
+    function updateTotal() {
+        let total = 0;
+        const seatDetails = [];
+
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                const price = parseFloat(cb.dataset.price);
+                total += price;
+                seatDetails.push({
+                    number: cb.dataset.seatnumber,
+                    type: cb.dataset.seattype,
+                    price: price
+                });
+            }
+        });
+
+        totalAmount = total;
+        totalDisplay.innerHTML = `Total: <span class="text-success">LKR ${total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
+
+        if (seatDetails.length > 0) {
+            const breakdown = seatDetails.map(seat =>
+                `${seat.number} (${seat.type}): LKR ${seat.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
+            ).join('<br>');
+            priceBreakdown.innerHTML = `<strong>Price Breakdown:</strong><br>${breakdown}`;
+        } else {
+            priceBreakdown.innerHTML = '';
+        }
+    }
+
+    function updateSelectedSeatsList() {
+        const selectedSeats = [];
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                selectedSeats.push({
+                    number: cb.dataset.seatnumber,
+                    type: cb.dataset.seattype,
+                    price: parseFloat(cb.dataset.price)
+                });
+            }
+        });
+
+        if (selectedSeats.length === 0) {
+            selectedSeatsList.innerHTML = '<span class="text-muted">No seats selected yet</span>';
+        } else {
+            selectedSeatsList.innerHTML = selectedSeats.map(seat =>
+                `<span class="selected-seat-item" title="LKR ${seat.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}">
+                    ${seat.number} (${seat.type})
+                </span>`
+            ).join('');
+        }
+    }
+
+    function updateSeatVisualState(checkbox) {
+        const seatLabel = checkbox.nextElementSibling;
+        if (checkbox.checked) {
+            seatLabel.style.transform = 'scale(1.05)';
+            seatLabel.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+        } else {
+            seatLabel.style.transform = 'scale(1)';
+            seatLabel.style.boxShadow = 'none';
+        }
+    }
+
+    document.querySelectorAll('.seat-card:not(.booked) .seat-label').forEach(label => {
+        label.addEventListener('mouseenter', function() {
+            const checkbox = this.previousElementSibling;
+            if (!checkbox || !checkbox.checked) {
+                this.style.boxShadow = '0 3px 10px rgba(0,0,0,0.15)';
+                this.style.transform = 'translateY(-2px)';
+            }
+        });
+
+        label.addEventListener('mouseleave', function() {
+            const checkbox = this.previousElementSibling;
+            if (!checkbox || !checkbox.checked) {
+                this.style.boxShadow = 'none';
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
+
+    updateSelectedSeatsList();
+    updateTotal();
+</script>

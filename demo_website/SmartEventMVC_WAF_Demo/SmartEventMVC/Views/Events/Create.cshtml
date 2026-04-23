@@ -1,0 +1,500 @@
+﻿@model SmartEventMVC.Models.EventCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<div class="create-event-container">
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-calendar-plus me-3"></i>Create New Event
+        </h1>
+        <a asp-action="Index" class="btn-back">
+            <i class="fas fa-arrow-left me-2"></i>Back to Events
+        </a>
+    </div>
+
+    <div class="modern-card">
+        <form asp-action="Create" enctype="multipart/form-data" id="createEventForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Event Details Section -->
+            <div class="section-header">
+                <i class="fas fa-info-circle"></i>
+                <h4>Event Details</h4>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Event.Title" class="control-label"></label>
+                        <input asp-for="Event.Title" class="form-control modern-input" placeholder="e.g. Music Night" />
+                        <span asp-validation-for="Event.Title" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Event.Location" class="control-label"></label>
+                        <input asp-for="Event.Location" class="form-control modern-input" placeholder="City / Venue" />
+                        <span asp-validation-for="Event.Location" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Event.Description" class="control-label"></label>
+                <textarea asp-for="Event.Description" class="form-control modern-input" rows="3" placeholder="Describe the event..."></textarea>
+                <span asp-validation-for="Event.Description" class="text-danger"></span>
+            </div>
+
+            <!-- Event Date – full width (Price removed) -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label asp-for="Event.EventDate" class="control-label"></label>
+                        <input asp-for="Event.EventDate" class="form-control modern-input" type="date" />
+                        <span asp-validation-for="Event.EventDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Event.ImagePath" class="control-label"></label>
+                <div class="file-upload-wrapper">
+                    <input type="file" name="imageFile" class="form-control modern-input" accept="image/*" id="imageFile" />
+                    <label for="imageFile" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt me-2"></i>Choose an image
+                    </label>
+                </div>
+                <span asp-validation-for="Event.ImagePath" class="text-danger"></span>
+                <small class="form-text text-muted-extra">Upload a cover image (JPG, PNG).</small>
+            </div>
+
+            <hr class="section-divider" />
+
+            <!-- Seat Types Section -->
+            <div class="section-header">
+                <i class="fas fa-chair"></i>
+                <h4>Seat Types</h4>
+                <span class="badge bg-accent">Define seat categories, quantities & prices</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table seat-types-table" id="seatTypesTable">
+                    <thead>
+                        <tr>
+                            <th>Seat Type</th>
+                            <th>Quantity</th>
+                            <th>Price (LKR)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.SeatTypes.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <select asp-for="SeatTypes[i].SeatType" class="form-control modern-select">
+                                        <option value="">Select Type</option>
+                                        <option value="VIP">VIP</option>
+                                        <option value="Premium">Premium</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Standard">Standard</option>
+                                        <option value="General">General</option>
+                                    </select>
+                                    <span asp-validation-for="SeatTypes[i].SeatType" class="text-danger"></span>
+                                </td>
+                                <td>
+                                    <input asp-for="SeatTypes[i].Quantity" class="form-control modern-input" type="number" min="1" placeholder="10" />
+                                    <span asp-validation-for="SeatTypes[i].Quantity" class="text-danger"></span>
+                                </td>
+                                <td>
+                                    <input asp-for="SeatTypes[i].Price" class="form-control modern-input" type="number" step="0.01" min="0" placeholder="0.00" />
+                                    <span asp-validation-for="SeatTypes[i].Price" class="text-danger"></span>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-danger-action btn-sm remove-row" title="Remove this seat type">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-3">
+                <button type="button" id="addRow" class="btn btn-secondary-action">
+                    <i class="fas fa-plus-circle me-2"></i>Add Another Seat Type
+                </button>
+            </div>
+
+            <hr class="section-divider" />
+
+            <div class="form-actions text-center">
+                <button type="submit" class="btn btn-primary-action">
+                    <i class="fas fa-calendar-check me-2"></i>Create Event
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Predefined seat type options for dropdown
+        const seatTypeOptions = `
+            <option value="">Select Type</option>
+            <option value="VIP">VIP</option>
+            <option value="Premium">Premium</option>
+            <option value="Regular">Regular</option>
+            <option value="Standard">Standard</option>
+            <option value="General">General</option>
+        `;
+
+        document.getElementById('addRow').addEventListener('click', function () {
+            var table = document.getElementById('seatTypesTable').getElementsByTagName('tbody')[0];
+            var index = table.rows.length;
+            var newRow = table.insertRow(index);
+            newRow.innerHTML = `
+                <td>
+                    <select class="form-control modern-select" name="SeatTypes[${index}].SeatType">
+                        ${seatTypeOptions}
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control modern-input" type="number" name="SeatTypes[${index}].Quantity" min="1" />
+                </td>
+                <td>
+                    <input class="form-control modern-input" type="number" step="0.01" name="SeatTypes[${index}].Price" min="0" />
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger-action btn-sm remove-row" title="Remove this seat type">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+        });
+
+        document.getElementById('seatTypesTable').addEventListener('click', function (e) {
+            if (e.target.closest('.remove-row')) {
+                e.target.closest('tr').remove();
+                reindexRows();
+            }
+        });
+
+        function reindexRows() {
+            var table = document.getElementById('seatTypesTable').getElementsByTagName('tbody')[0];
+            for (var i = 0; i < table.rows.length; i++) {
+                var selects = table.rows[i].getElementsByTagName('select');
+                var inputs = table.rows[i].getElementsByTagName('input');
+                // SeatType dropdown
+                selects[0].name = `SeatTypes[${i}].SeatType`;
+                // Quantity input
+                inputs[0].name = `SeatTypes[${i}].Quantity`;
+                // Price input
+                inputs[1].name = `SeatTypes[${i}].Price`;
+            }
+        }
+
+        // Optional: Client-side validation to ensure all seat type rows are filled before submit
+        document.getElementById('createEventForm').addEventListener('submit', function (e) {
+            var rows = document.querySelectorAll('#seatTypesTable tbody tr');
+            var isValid = true;
+            rows.forEach(function (row) {
+                var select = row.querySelector('select');
+                var quantity = row.querySelector('input[type="number"]');
+                var price = row.querySelectorAll('input[type="number"]')[1];
+                if (!select.value || !quantity.value || !price.value) {
+                    isValid = false;
+                    row.style.backgroundColor = '#3b1e1e'; // dark red highlight
+                } else {
+                    row.style.backgroundColor = '';
+                }
+            });
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill all seat type fields before submitting.');
+            }
+        });
+    </script>
+}
+
+<style>
+    /* === GLOBAL DARK THEME (consistent with other pages) === */
+    .create-event-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+
+    .btn-back {
+        background: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        border: 1px solid rgba(165, 180, 252, 0.3);
+        padding: 0.6rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+    /* Modern Card – glassmorphism */
+    .modern-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        border: 1px solid rgba(165, 180, 252, 0.25);
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .modern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(91, 33, 182, 0.4);
+        }
+
+    /* Section Headers */
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(165, 180, 252, 0.2);
+    }
+
+        .section-header i {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header h4 {
+            color: #e2e8f0;
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .section-header .badge {
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: white;
+            font-weight: 500;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+    /* Form Inputs */
+    .modern-input, .modern-select {
+        background: rgba(15, 23, 42, 0.7) !important;
+        border: 1px solid rgba(165, 180, 252, 0.3) !important;
+        color: #f1f5f9 !important;
+        border-radius: 12px !important;
+        padding: 0.75rem 1rem !important;
+        transition: all 0.3s ease !important;
+    }
+
+        .modern-input:focus, .modern-select:focus {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-color: #a855f7 !important;
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2) !important;
+            outline: none;
+        }
+
+        .modern-input::placeholder {
+            color: #94a3b8;
+            opacity: 0.7;
+        }
+
+    .form-group label {
+        color: #cbd5e1;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .text-muted-extra {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+
+    /* File Upload */
+    .file-upload-wrapper {
+        position: relative;
+    }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+    .file-upload-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(91, 33, 182, 0.2);
+        border: 2px dashed rgba(165, 180, 252, 0.5);
+        border-radius: 12px;
+        padding: 2rem;
+        color: #e2e8f0;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        z-index: 1;
+        position: relative;
+    }
+
+    .file-upload-wrapper:hover .file-upload-label {
+        background: rgba(91, 33, 182, 0.35);
+        border-color: #a855f7;
+    }
+
+    /* Seat Types Table */
+    .seat-types-table {
+        color: #e2e8f0;
+    }
+
+        .seat-types-table thead th {
+            border-bottom: 2px solid rgba(165, 180, 252, 0.3);
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 1rem 0.5rem;
+        }
+
+        .seat-types-table td {
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(165, 180, 252, 0.1);
+            padding: 0.75rem 0.5rem;
+        }
+
+    /* Buttons */
+    .btn-primary-action {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        border: none;
+        color: white;
+        padding: 0.9rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
+        transition: all 0.3s ease;
+        min-width: 220px;
+    }
+
+        .btn-primary-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.5);
+            filter: brightness(1.1);
+            color: white;
+        }
+
+    .btn-secondary-action {
+        background: transparent;
+        border: 2px solid rgba(165, 180, 252, 0.6);
+        color: #e2e8f0;
+        padding: 0.7rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary-action:hover {
+            background: rgba(165, 180, 252, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+    .btn-danger-action {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        border: none;
+        color: white;
+        border-radius: 10px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+        .btn-danger-action:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+        }
+
+    .section-divider {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(165, 180, 252, 0.3), transparent);
+        margin: 2rem 0;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .create-event-container {
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .btn-back {
+            width: 100%;
+            text-align: center;
+        }
+
+        .modern-card {
+            padding: 1.5rem;
+        }
+    }
+</style>

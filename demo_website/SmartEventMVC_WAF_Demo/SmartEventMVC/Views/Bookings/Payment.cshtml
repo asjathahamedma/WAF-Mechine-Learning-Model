@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="container mt-5">
+    <h2>Payment</h2>
+    <div class="card">
+        <div class="card-body">
+            <h4>Total Amount: LKR @ViewBag.TotalAmount</h4>
+
+            <form asp-action="Payment" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Payment Method</label>
+                    <select name="paymentType" class="form-select" required>
+                        <option value="Card">Credit/Debit Card</option>
+                        <option value="Cash">Cash on Arrival</option>
+                    </select>
+                </div>
+
+                <div class="alert alert-info">
+                    This is a simulation – no real payment gateway is used.
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    Pay Now
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

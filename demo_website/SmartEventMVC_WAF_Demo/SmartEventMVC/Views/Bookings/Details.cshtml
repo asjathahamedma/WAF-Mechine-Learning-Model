@@ -1,0 +1,43 @@
+﻿@model SmartEventMVC.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+    var isAdmin = Context.Session.GetString("Mobile") == "0711111111";
+}
+
+<h1>Booking Details</h1>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light">
+        <h4 class="mb-0">Booking #@Model.BookingId</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">Event</dt>
+            <dd class="col-sm-9">@(Model.Event?.Title ?? "N/A")</dd>
+
+            <dt class="col-sm-3 fw-bold">Member</dt>
+            <dd class="col-sm-9">@(Model.Member?.Mobile ?? "N/A")</dd>
+
+            <dt class="col-sm-3 fw-bold">Total Amount</dt>
+            <dd class="col-sm-9">LKR @(Model.TotalAmount?.ToString("N2") ?? "0.00")</dd>
+
+            <dt class="col-sm-3 fw-bold">Payment Type</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.PaymentType)</dd>
+
+            <dt class="col-sm-3 fw-bold">Booking Date</dt>
+            <dd class="col-sm-9">@(Model.BookingDate.HasValue? Model.BookingDate.Value.ToString("dd MMM yyyy HH:mm") : "N/A")</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-4">
+   
+    <!-- Edit button - ONLY for admin -->
+    @if (isAdmin)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.BookingId" class="btn btn-warning">
+            Edit Booking
+        </a>
+    }
+</div>

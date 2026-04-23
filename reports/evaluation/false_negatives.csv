@@ -1,0 +1,169 @@
+request,probability_malicious,rule_based_malicious,rule_based_safe,rule_reason,source,attack_type
+"POST /tienda1/publico/pagar.jsp HTTP/1.1
+
+modo=insertar&precio=+&B1=Pasar+por+caja",0.06672429154903259,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/pagar.jsp?modo=insertar&precio=+&B1=Pasar+por+caja HTTP/1.1,0.07538161173923674,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/pagar.jsp HTTP/1.1
+
+modo=insertar&precio=+&B1=Confirmar",0.07723801037117439,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=1&nombre=Jam%F3n+Ib%E9rico&precio=39&cantidad=57+&B1=A%F1adir+al+carrito HTTP/1.1,0.12443024852179996,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/registro.jsp HTTP/1.1
+
+modo=registro&login=ailina&password=tel9m%E9trica&nombre=Fernando&apellidos=Palliser+Ba%2C%2Flbuena&email=dugan%40onlinegratis.ls&dni=70144091W&direccion=Calle+Monte+Del+Taco+102+12%3FA&ciudad=San+Miguel+de+Bernuy&cp=08694&provincia=Almer%EDa&ntc=0887576262160780&B1=Registrar",0.14256941549605084,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/pagar.jsp HTTP/1.1
+
+modo=insertar+&precio=9317&B1=Pasar+por+caja",0.17552743497178314,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=nu%2Bnn8&pwd=monstruosidad&remember=on&B1=Entrar HTTP/1.1,0.20275098834929484,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=3&nombre=Jam%F3n+Ib%E9rico&precio=85&cantidad=68&B1=A%F1adir+al+carrito%253F HTTP/1.1,0.2712211342914702,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=rennolds&pwd=dese%2C%F17miento&remember=on&B1=Entrar HTTP/1.1,0.2945211646832563,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=2&nombre=Vino+Rioja&precio=+&cantidad=23&B1=A%F1adir+al+carrito",0.31333105089834323,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=2&nombre=Queso+Manchego&precio=85%257C&cantidad=71&B1=A%F1adir+al+carrito",0.33678270292311085,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=2&nombre=Vino+Rioja&precio=100%2B&cantidad=32&B1=A%F1adir+al+carrito HTTP/1.1,0.3829862959481468,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=1&nombre=Jam%F3n+Ib%E9rico&precio=85%2B&cantidad=80&B1=A%F1adir+al+carrito HTTP/1.1,0.3901621990233485,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=2&nombre=Vino+Rioja&precio=100%2B&cantidad=32&B1=A%F1adir+al+carrito",0.41372476240015243,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=kathy&pwd=%27caracterismo&remember=on&B1=Entrar HTTP/1.1,0.4181632595757624,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=3Set-cookie%253A%2BTamper%253D1041264011025374727&nombre=Queso+Manchego&precio=100&cantidad=0&B1=A%F1adir+al+carrito",0.44384002989040827,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=3&nombre=Queso+Manchego%257C&precio=39&cantidad=45&B1=A%F1adir+al+carrito",0.4712116796535746,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=wooten&pwd=+&remember=on&B1=Entrar",0.47866191978221373,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=cady%2B&pwd=ti%F1osa&remember=off&B1=Entrar",0.48212856685015104,0,0,model_only,dataset1,public_attack
+"POST /tienda1/miembros/editar.jsp HTTP/1.1
+
+modo=registro&login=omayma&password=fr78gen5e&nombre=Olimpio&apellidos=Pe%F1afiel&emailA=flagg%40bacoespecialselecci%F3n.lb&dni=40888726Q&direccion=Prolongacion+Jose+Zorrilla+56+&ciudad=Muxika&cp=06413&provincia=%C1vila&ntc=5771094131298411&B1=Registrar",0.483506398842353,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=1&nombre=Queso+Manchego%252B&precio=85&cantidad=61&B1=A%F1adir+al+carrito",0.5228758457084444,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=cady&pwd=in59r%2F0o&remember=off&B1=Entrar HTTP/1.1,0.5352038266576592,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=3&nombre=Vino+Rioja%2B&precio=39&cantidad=82&B1=A%F1adir+al+carrito",0.5455248384513174,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=sysint9&pwd=l2n7at8s55&remember=on&B1=Entrar%2B",0.5495749947314288,0,0,model_only,dataset1,public_attack
+GET /tienda1/imagenes/asf-logo-wide.gif HTTP/1.1,0.5510454920163635,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=marv&pwd=%2Ce40al%27F3c%2F23se&remember=off&B1=Entrar",0.5529188982290245,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=%2Be%27gner&pwd=mi4lo&remember=on&B1=Entrar",0.5550932020018019,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=yokono5any%250ASet-cookie%253A%2BTamper%253D1041264011025374727&pwd=yuntar&remember=off&B1=Entrar HTTP/1.1,0.5666464093070915,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=dincamps&pwd=8%2Fast2tano&remember=off&B1=Entrar HTTP/1.1,0.5724039584519367,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=mtl%2500&pwd=r22camien5%2B9&remember=off&B1=Entrar HTTP/1.1,0.5751124859259071,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=%2Be%27gner&pwd=mi4lo&remember=on&B1=Entrar HTTP/1.1,0.5827526630530636,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=2&nombre=Jam%F3n+Ib%E9rico&precio=100any%253F%250D%250ASet-cookie%253A%2BTamper%253D1041264011025374727%250D%250A&cantidad=47&B1=A%F1adir+al+carrito HTTP/1.1,0.5859094978680506,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=1%2B&nombre=Queso+Manchego&precio=39&cantidad=15&B1=A%F1adir+al+carrito",0.5886236737116146,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modoA=entrar&login=girouard&pwd=Disgu5TAd1&remember=off&B1=Entrar HTTP/1.1,0.5976681220634508,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=woins%3Fky&pwd=pagaDEra&remember=off&B1=Entrar",0.6016882575830453,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=2&nombre=Jam%F3n+Ib%E9rico&precio=39&cantidad=78&B1=A%F1adir+al+carrito%2B HTTP/1.1,0.6039872428594617,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=3&nombre=Vino+Rioja&precio=39&cantidad=25&B1=A%F1adir+al+carrito%4040 HTTP/1.1,0.6071571882541993,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/pagar.jsp HTTP/1.1
+
+modo=insertar&precio=3400%2B&B1=Confirmar",0.6242310854867974,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=levon&pwd=ca%F1ucela%253CSCRIPT%253Ealert%2528%2522Paros%2522%2529%253B%253C%252FSCRIPT%253E&remember=on&B1=Entrar HTTP/1.1,0.6260807574651193,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=woins%3Fky&pwd=pagaDEra&remember=off&B1=Entrar HTTP/1.1,0.6310596385339673,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=zamp%27ino&pwd=frutillero&remember=off&B1=Entrar",0.6319801159660272,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar+&login=vivek&pwd=muletillera&remember=on&B1=Entrar",0.63986894742627,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=sabry&pwd=%2F31l%27PA0t%2Ce&remember=off&B1=Entrar",0.6405121433126384,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=de_w%2Citt&pwd=e2cr1t0c0&remember=off&B1=Entrar",0.6419374067695872,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=3&nombre=Vino+Rioja&precio=85&cantidad=%2520&B1=A%F1adir+al+carrito HTTP/1.1,0.6424447920019052,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=1&nombre=Jam%F3n+Ib%E9ricoany%250ASet-cookie%253A%2BTamper%253D1041264011025374727&precio=100&cantidad=76&B1=A%F1adir+al+carrito",0.6449724824753493,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=1&nombre=Vino+Rioja%27INJECTED_PARAM&precio=85&cantidad=7&B1=A%F1adir+al+carrito",0.645468382643885,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=yanshek&pwd=m%E1sticis%2500&remember=off&B1=Entrar",0.6463571023449124,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=chima&pwd=58rB57%EDf51%279&remember=on&B1=Entrar HTTP/1.1,0.6503979503201731,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=3%252B&nombre=Vino+Rioja&precio=39&cantidad=41&B1=A%F1adir+al+carrito HTTP/1.1,0.6504983188531939,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/pagar.jsp HTTP/1.1
+
+modo=insertar%7C&precio=4569&B1=Pasar+por+caja",0.6513572878457753,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/pagar.jsp HTTP/1.1
+
+modoA=insertar&precio=1737&B1=Pasar+por+caja",0.6547518031555981,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=2%257C&nombre=Vino+Rioja&precio=85&cantidad=18&B1=A%F1adir+al+carrito",0.6585941784837334,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=3%7C&nombre=Vino+Rioja&precio=85&cantidad=4&B1=A%F1adir+al+carrito",0.6597306177707367,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=zamp%27ino&pwd=frutillero&remember=off&B1=Entrar HTTP/1.1,0.6603049350978363,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/pagar.jsp?modo=insertar&precio=3400%2B&B1=Confirmar HTTP/1.1,0.6615881392027758,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/pagar.jsp?modo=insertar&precio=8064any%253F%250D%250ASet-cookie%253A%2BTamper%253D1041264011025374727%250D%250A&B1=Confirmar HTTP/1.1,0.6619818354380587,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=de_w%2Citt&pwd=e2cr1t0c0&remember=off&B1=Entrar HTTP/1.1,0.6671857870071994,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=3&nombre=Vino+Rioja&precio=85&cantidad=%2520&B1=A%F1adir+al+carrito",0.6712344081201633,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=kaidanne&pwd=%2Fpulideza&remember=on&B1=Entrar",0.6730422033372705,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=1%27%2C%270%27%2C%270%27%2C%270%27%29%3Bwaitfor+delay+%270%3A0%3A15%27%3B--&nombre=Vino+Rioja&precio=100&cantidad=34&B1=A%F1adir+al+carrito",0.673402673412639,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=3&nombre=Jam%F3n+Ib%E9rico&precio=100&cantidad=%3F&B1=A%F1adir+al+carrito HTTP/1.1,0.6755926831469548,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=ro%2B%3Fsemari&pwd=1Eb5l0e&remember=off&B1=Entrar",0.6793721632156999,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=1&nombre=Vino+Rioja&precio=100Set-cookie%253A%2BTamper%253D1041264011025374727&cantidad=55&B1=A%F1adir+al+carrito",0.6797084974144755,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=sawyer%2Fs&pwd=v%CDa&remember=off&B1=Entrar HTTP/1.1,0.6856073431889765,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=any%250ASet-cookie%253A%2BTamper%253D1041264011025374727&nombre=Queso+Manchego&precio=85&cantidad=12&B1=A%F1adir+al+carrito",0.6872164082861245,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=letendre&pwd=6iand15a%2500&remember=on&B1=Entrar",0.6896121223809439,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=3&nombre=Vino+Rioja&precio=100&cantidad=bob%2540%253CSCRipt%253Ealert%2528Paros%2529%253C%252FscrIPT%253E.parosproxy.org&B1=A%F1adir+al+carrito",0.6898077111015475,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=1&nombre=Vino+Rioja&precio=39%257C&cantidad=68&B1=A%F1adir+al+carrito HTTP/1.1,0.6908504808574842,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=iwona&pwd=pantorrilluda&rememberA=off&B1=Entrar",0.6908584485159439,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/autenticar.jsp HTTP/1.1
+
+modo=entrar&login=deiad%2Frel&pwd=escinco&remember=on&B1=Entrar",0.6915319188147662,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=1&nombre=Ques%2Bo+Manchego&precio=85&cantidad=10&B1=A%F1adir+al+carrito HTTP/1.1,0.6916309187667296,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/pagar.jsp?modo=insertar&precio=1859&B1A=Confirmar HTTP/1.1,0.6919472161444951,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=2&nombre=Queso+Manchego&precio=100&cantidad=%257C&B1=A%F1adir+al+carrito HTTP/1.1,0.6923549791575963,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=m%3Fanley&pwd=carteo&remember=off&B1=Entrar HTTP/1.1,0.6968305798244903,0,0,model_only,dataset1,public_attack
+"PUT /tienda1/publico/pagar.jsp HTTP/1.1
+
+modo=insertar&precio=9671&B1=Pasar+por+caja",0.6968578922993769,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/anadir.jsp?id=1%2500&nombre=Vino+Rioja&precio=85&cantidad=26&B1=A%F1adir+al+carrito HTTP/1.1,0.6970575672997243,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=2&nombre=Vino+Rioja&precio=100&cantidad=%3F&B1=A%F1adir+al+carrito",0.6971956418807121,0,0,model_only,dataset1,public_attack
+"POST /tienda1/publico/anadir.jsp HTTP/1.1
+
+id=3&nombre=Queso+Manchego&precio=39&cantidad=%2520&B1=A%F1adir+al+carrito",0.698305597458525,0,0,model_only,dataset1,public_attack
+GET /tienda1/publico/autenticar.jsp?modo=entrar&login=oyama&pwd=chiapaany%250ASet-cookie%253A%2BTamper%253D1041264011025374727&remember=on&B1=Entrar HTTP/1.1,0.6985341220973724,0,0,model_only,dataset1,public_attack

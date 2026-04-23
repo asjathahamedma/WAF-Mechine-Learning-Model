@@ -1,0 +1,164 @@
+﻿@model SmartEventMVC.Models.Event
+@{
+    ViewData["Title"] = "Delete Event";
+    bool hasDependencies = ViewBag.HasDependencies as bool? ?? false;
+}
+
+<div class="delete-event-container">
+    <h1 class="page-title text-danger">
+        <i class="fas fa-exclamation-triangle me-3"></i>Delete Event
+    </h1>
+
+    <div class="modern-card">
+        <p class="lead">
+            Are you sure you want to delete the event
+            <strong class="event-title">"@Model.Title"</strong>?
+        </p>
+
+        @if (hasDependencies)
+        {
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <strong>Warning:</strong> This event has existing
+                <strong>bookings, seats, reviews, or inquiries</strong>.
+                Deleting it will permanently remove all related data.
+            </div>
+
+            <div class="confirmation-checkbox">
+                <input type="checkbox" id="confirmDelete" />
+                <label for="confirmDelete" class="">
+                    I understand that all associated bookings, seats, reviews, and inquiries will be permanently deleted.
+                </label>
+            </div>
+        }
+
+        <form asp-action="Delete" method="post" id="deleteForm">
+            <input type="hidden" asp-for="EventId" />
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger" id="deleteBtn" @(hasDependencies ? "disabled" : "")>
+                    <i class="fas fa-trash-alt me-2"></i>Yes, Delete Event
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @if (hasDependencies)
+    {
+        <script>
+            const confirmCheckbox = document.getElementById('confirmDelete');
+            const deleteBtn = document.getElementById('deleteBtn');
+
+            confirmCheckbox.addEventListener('change', function() {
+                deleteBtn.disabled = !this.checked;
+            });
+        </script>
+    }
+}
+
+<style>
+    .delete-event-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: #dc3545;
+    }
+
+    .modern-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(16px) saturate(180%);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .lead {
+        color: #e2e8f0;
+        font-size: 1.2rem;
+    }
+
+    .event-title {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .alert-warning {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid #f59e0b;
+        color: #fcd34d;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+    }
+
+    .confirmation-checkbox {
+        margin: 1.5rem 0;
+        padding: 1rem;
+        background: rgba(0,0,0,0.2);
+        border-radius: 12px;
+    }
+
+        .confirmation-checkbox label {
+            color: #cbd5e1;
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        border: none;
+        color: white;
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-danger:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-danger:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+    .btn-secondary {
+        background: transparent;
+        border: 2px solid rgba(165, 180, 252, 0.3);
+        color: #e2e8f0;
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+</style>

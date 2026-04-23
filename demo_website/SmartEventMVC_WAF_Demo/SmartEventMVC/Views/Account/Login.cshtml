@@ -1,0 +1,393 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-container">
+    <!-- Add this success message section -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success-message">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+        </div>
+    }
+    <div class="login-wrapper">
+        <div class="login-header">
+            <div class="login-logo">
+                <i class="fas fa-ticket-alt"></i>
+                <h1>Smart Event</h1>
+            </div>
+            <p class="login-subtitle">Sign in to your account</p>
+        </div>
+
+        <div class="login-card">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    @ViewBag.Error
+                </div>
+            }
+
+            <form asp-action="Login" method="post" class="login-form">
+                <div class="form-group">
+                    <label for="mobile" class="form-label">
+                        <i class="fas fa-phone"></i> Mobile Number
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text"
+                               class="form-input"
+                               id="mobile"
+                               name="mobile"
+                               placeholder="07xxxxxxxx"
+                               required
+                               autofocus />
+                    </div>
+                    <div class="input-hint">
+                        Enter your registered mobile number
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key input-icon"></i>
+                        <input type="password"
+                               class="form-input"
+                               id="password"
+                               name="password"
+                               placeholder="Enter your password"
+                               required />
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-button">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Sign In</span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>New to Smart Event?</p>
+                <a asp-controller="Members" asp-action="Create" class="register-link">
+                    Create an account <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Login Page Styling */
+    .alert-success-message {
+        background: linear-gradient(135deg, #20c997, #3dd9ad);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-weight: 500;
+        animation: slideIn 0.5s ease;
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        min-width: 300px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(32, 201, 151, 0.3);
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+    }
+
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 1rem;
+    }
+
+        .login-logo i {
+            font-size: 2.5rem;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        .login-logo h1 {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .login-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        animation: fadeInUp 0.5s ease;
+    }
+
+    /* Alert */
+    .alert-error {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        animation: shake 0.5s ease;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .input-with-icon {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #667eea;
+        font-size: 1rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 15px 15px 15px 45px;
+        border: 2px solid #e0e6ed;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        padding: 5px;
+        font-size: 1rem;
+    }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+    .input-hint {
+        color: #666;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        padding-left: 5px;
+    }
+
+    /* Login Button */
+    .login-button {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 2rem 0 1.5rem 0;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+    /* Login Footer */
+    .login-footer {
+        text-align: center;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e0e6ed;
+    }
+
+        .login-footer p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+    .register-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .register-link:hover {
+            color: #764ba2;
+            gap: 10px;
+        }
+
+    /* Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        75% {
+            transform: translateX(5px);
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 576px) {
+        .login-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .login-logo h1 {
+            font-size: 1.8rem;
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<script>
+    // Toggle password visibility
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = togglePassword.querySelector('i');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Toggle eye icon
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+
+        // Add focus effect to input
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    });
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

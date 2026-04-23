@@ -1,0 +1,4 @@
+# Python packages required for the PySpark WAF scripts.
+# The virtual environment folder is intentionally not submitted because it is very large.
+pyspark==4.1.1
+py4j==0.10.9.9

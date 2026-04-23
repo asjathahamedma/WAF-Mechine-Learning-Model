@@ -1,0 +1,24 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Keep the repo small by excluding generated Spark staging data.
+data_processed/_staging/
+*.crc
+
+# Demo browser profiles and temporary API files are generated locally.
+demo_files/edge_chart_profile*/
+demo_files/edge_screenshot_profile/
+demo_files/_waf_api_staging/
+
+# ASP.NET build output should be rebuilt locally, not committed.
+**/bin/
+**/obj/
+**/.vs/
+
+# Editor and OS files.
+.vscode/
+.DS_Store
+Thumbs.db

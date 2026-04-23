@@ -1,0 +1,9 @@
+attack_type,method,path,query_template,body_template,label
+command,GET,/ping,ip=__PAYLOAD__,,1
+file_inclusion,GET,/index.php,page=__PAYLOAD__,,1
+redirect,GET,/redirect,url=__PAYLOAD__,,1
+sqli,POST,/login,,username=admin&password=__PAYLOAD__,1
+ssrf,POST,/fetch,,url=__PAYLOAD__,1
+traversal,GET,/download,file=__PAYLOAD__,,1
+xss,GET,/search,q=__PAYLOAD__,,1
+xxe,POST,/xml,,xml=__PAYLOAD__,1

@@ -1,0 +1,40 @@
+{
+  "output_path": "C:\\Users\\Asjath\\Desktop\\Pyspark_WAF_Project\\data_processed\\master_dataset",
+  "included_sources": [
+    "custom_dataset",
+    "dataset1",
+    "dataset2"
+  ],
+  "excluded_sources": [
+    {
+      "source": "csic_database",
+      "reason": "exact_duplicate_of_dataset1"
+    },
+    {
+      "source": "dataset3",
+      "reason": "exact_duplicate_of_dataset2_after_canonicalization"
+    }
+  ],
+  "raw_record_counts": {
+    "dataset1": 61065,
+    "custom_dataset": 269,
+    "dataset2": 25065
+  },
+  "final_total_rows": 25685,
+  "final_label_distribution": {
+    "1": 16011,
+    "0": 9674
+  },
+  "final_attack_type_distribution": {
+    "redirect": 5,
+    "normal": 9644,
+    "public_attack": 15953,
+    "benign": 30,
+    "command": 37,
+    "file_inclusion": 5,
+    "traversal": 7,
+    "xss": 4
+  },
+  "final_imbalance_ratio_malicious_to_normal": 1.6550547860243954,
+  "kept_duplicates": false
+}

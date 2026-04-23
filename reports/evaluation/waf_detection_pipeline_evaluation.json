@@ -1,0 +1,39 @@
+{
+  "accuracy": 0.9833906071019473,
+  "weighted_precision": 0.9838899121699713,
+  "weighted_recall": 0.9833906071019474,
+  "f1": 0.9834418150552467,
+  "area_under_roc": 0.9987416797354532,
+  "area_under_pr": 0.9989778450960307,
+  "confusion_matrix": [
+    {
+      "label": 0,
+      "prediction": 0,
+      "count": 2022
+    },
+    {
+      "label": 0,
+      "prediction": 1,
+      "count": 7
+    },
+    {
+      "label": 1,
+      "prediction": 0,
+      "count": 80
+    },
+    {
+      "label": 1,
+      "prediction": 1,
+      "count": 3129
+    }
+  ],
+  "false_positive_count": 7,
+  "false_negative_count": 80,
+  "false_positive_rate": 0.0034499753573188764,
+  "false_negative_rate": 0.024929884699283266,
+  "test_rows": 4977,
+  "dataset_path": "C:\\Users\\Asjath\\Desktop\\Pyspark_WAF_Project\\data_processed\\master_dataset",
+  "model_path": "C:\\Users\\Asjath\\Desktop\\Pyspark_WAF_Project\\model\\waf_detection_pipeline",
+  "prediction_threshold": 0.7,
+  "recommended_threshold": 0.7
+}

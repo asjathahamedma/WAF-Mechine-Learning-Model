@@ -1,0 +1,377 @@
+﻿@model SmartEventMVC.Models.Member
+
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="register-container">
+    <div class="register-wrapper">
+        <div class="register-header">
+            <div class="register-logo">
+                <i class="fas fa-user-plus"></i>
+                <h1>Join Smart Event</h1>
+            </div>
+            <p class="register-subtitle">Create your account in seconds</p>
+        </div>
+
+        <div class="register-card">
+            <form asp-action="Create" class="register-form">
+                <div asp-validation-summary="ModelOnly" class="alert-error"></div>
+
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label">
+                        <i class="fas fa-user"></i> Full Name
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-id-card input-icon"></i>
+                        <input asp-for="Name"
+                               class="form-input"
+                               placeholder="Enter your full name" />
+                    </div>
+                    <span asp-validation-for="Name" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Mobile" class="form-label">
+                        <i class="fas fa-phone"></i> Mobile Number
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-mobile-alt input-icon"></i>
+                        <input asp-for="Mobile"
+                               class="form-input"
+                               placeholder="07xxxxxxxx" />
+                    </div>
+                    <span asp-validation-for="Mobile" class="validation-error"></span>
+                    <div class="input-hint">This will be your username for login</div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key input-icon"></i>
+                        <input asp-for="Password"
+                               type="password"
+                               class="form-input"
+                               placeholder="Create a strong password" />
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password" class="validation-error"></span>
+                    <div class="input-hint">Minimum 6 characters</div>
+                </div>
+
+                <button type="submit" class="register-button">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Create Account</span>
+                </button>
+            </form>
+
+            <div class="register-footer">
+                <p>Already have an account?</p>
+                <a asp-controller="Account" asp-action="Login" class="login-link">
+                    <i class="fas fa-sign-in-alt"></i> Sign in instead
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Registration Page Styling */
+    .register-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        padding: 20px;
+    }
+
+    .register-wrapper {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .register-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 1rem;
+    }
+
+        .register-logo i {
+            font-size: 2.5rem;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        .register-logo h1 {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .register-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .register-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        animation: fadeInUp 0.5s ease 0.2s both;
+    }
+
+    /* Form Styles */
+    .register-form {
+        margin-top: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.8rem;
+    }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .input-with-icon {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4facfe;
+        font-size: 1rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 15px 15px 15px 45px;
+        border: 2px solid #e0e6ed;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+    .validation-error {
+        color: #ff6b6b;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+        padding-left: 5px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        padding: 5px;
+        font-size: 1rem;
+    }
+
+        .password-toggle:hover {
+            color: #4facfe;
+        }
+
+    .input-hint {
+        color: #666;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        padding-left: 5px;
+    }
+
+    /* Register Button */
+    .register-button {
+        width: 100%;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 2.5rem 0 1.5rem 0;
+        box-shadow: 0 4px 15px rgba(79, 172, 254, 0.2);
+    }
+
+        .register-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .register-button:active {
+            transform: translateY(0);
+        }
+
+    /* Register Footer */
+    .register-footer {
+        text-align: center;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e0e6ed;
+    }
+
+        .register-footer p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+    .login-link {
+        color: #4facfe;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .login-link:hover {
+            color: #00f2fe;
+            gap: 12px;
+        }
+
+    /* Alert Styling */
+    .alert-error {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+        animation: shake 0.5s ease;
+    }
+
+        .alert-error ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .alert-error li {
+            margin-bottom: 5px;
+        }
+
+    /* Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 576px) {
+        .register-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .register-logo h1 {
+            font-size: 1.8rem;
+        }
+
+        .register-subtitle {
+            font-size: 1rem;
+        }
+
+        .form-input {
+            padding: 12px 12px 12px 40px;
+        }
+    }
+</style>
+
+<script>
+    // Toggle password visibility
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.querySelector('input[type="password"]');
+
+        if (togglePassword && passwordInput) {
+            const eyeIcon = togglePassword.querySelector('i');
+
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                // Toggle eye icon
+                eyeIcon.classList.toggle('fa-eye');
+                eyeIcon.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Add floating label effect
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+
+            // Add animation on input
+            input.addEventListener('input', function() {
+                if (this.value) {
+                    this.style.background = 'white';
+                } else {
+                    this.style.background = '#f8f9fa';
+                }
+            });
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

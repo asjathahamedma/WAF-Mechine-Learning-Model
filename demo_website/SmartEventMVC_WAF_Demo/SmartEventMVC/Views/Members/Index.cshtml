@@ -1,0 +1,393 @@
+﻿@model IEnumerable<SmartEventMVC.Models.Member>
+
+@{
+    ViewData["Title"] = "Member Management";
+    var isAdmin = Context.Session.GetString("Mobile") == "0711111111";
+}
+
+<div class="admin-container">
+    <div class="admin-header glass-header">
+        <div class="header-content">
+            <h1 class="admin-title gradient-text">
+                <i class="fas fa-users-cog me-3"></i>Member Management
+            </h1>
+            <p class="admin-subtitle">Manage all registered members in the Smart Event System</p>
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="btn-add-member">
+                <i class="fas fa-user-plus me-2"></i>Add New Member
+            </a>
+        }
+    </div>
+
+    <div class="modern-card members-table-card">
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="fas fa-users-slash fa-4x mb-4 text-muted"></i>
+                <h4>No Members Registered Yet</h4>
+                <p class="mb-4">The member list is currently empty.</p>
+                @if (isAdmin)
+                {
+                    <a asp-action="Create" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Create First Member
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user me-2"></i>Member</th>
+                            <th><i class="fas fa-phone me-2"></i>Mobile</th>
+                            <th><i class="fas fa-shield-alt me-2"></i>Role</th>
+                            <th class="text-center"><i class="fas fa-cogs me-2"></i>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="member-cell">
+                                        <div class="member-avatar gradient-avatar">
+                                            <i class="fas fa-user-circle"></i>
+                                        </div>
+                                        <div class="member-info">
+                                            <div class="member-name">
+                                                @(string.IsNullOrEmpty(item.Name) ? "Unnamed" : item.Name)
+                                            </div>
+                                            <div class="member-id small">
+                                                ID: @item.MemberId
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="mobile-cell">
+                                        <i class="fas fa-mobile-alt me-2 text-primary"></i>
+                                        @item.Mobile
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="role-badge @(item.Mobile == "0711111111" ? "role-admin" : "role-member")">
+                                        @(item.Mobile == "0711111111" ? "Admin" : "Member")
+                                    </span>
+                                </td>
+                                <td class="text-center actions-cell">
+                                    <div class="action-group">
+                                        <a asp-action="Details" asp-route-id="@item.MemberId"
+                                           class="btn-action btn-view" data-bs-toggle="tooltip" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.MemberId"
+                                           class="btn-action btn-edit" data-bs-toggle="tooltip" title="Edit Member">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.MemberId" method="post" style="display:inline;"
+                                              onsubmit="return confirm('Are you sure you want to delete this member?\nThis action cannot be undone.');">
+                                            <button type="submit" class="btn-action btn-delete" data-bs-toggle="tooltip" title="Delete Member">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer mt-4 text-center text-muted small">
+                Total Members: <strong>@Model.Count()</strong> • Last updated: @DateTime.Now.ToString("dd MMM yyyy HH:mm")
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    /* ────────────────────────────────────────────────
+           MEMBER MANAGEMENT – DARK GLASSMORPHISM STYLE
+        ──────────────────────────────────────────────── */
+    .admin-container {
+        padding: 2rem 1rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Header */
+    .glass-header {
+        background: var(--glass-bg, rgba(30, 41, 59, 0.45));
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        border: 1px solid rgba(165, 180, 252, 0.22);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-lg);
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .admin-title.gradient-text {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .admin-subtitle {
+        color: #cbd5e1;
+        opacity: 0.88;
+        font-size: 1.15rem;
+        margin: 0.6rem 0 0;
+    }
+
+    .btn-add-member {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: 0.95rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        box-shadow: var(--shadow-md);
+        transition: all 0.35s ease;
+        white-space: nowrap;
+    }
+
+        .btn-add-member:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            filter: brightness(1.12);
+        }
+
+    /* Main Card */
+    .members-table-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(165, 180, 252, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Table */
+    .modern-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .modern-table thead th {
+            background: rgba(15, 23, 42, 0.65);
+            color: #cbd5e1;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.92rem;
+            letter-spacing: 0.6px;
+            padding: 1.3rem 1.6rem;
+            border-bottom: 1px solid rgba(165, 180, 252, 0.18);
+        }
+
+        .modern-table tbody tr {
+            background: rgba(30, 41, 59, 0.45);
+            transition: all 0.3s ease;
+        }
+
+            .modern-table tbody tr:nth-child(even) {
+                background: rgba(30, 41, 59, 0.6);
+            }
+
+            .modern-table tbody tr:hover {
+                background: rgba(91, 33, 182, 0.22);
+                transform: translateY(-2px);
+            }
+
+    .data-cell {
+        padding: 1.4rem 1.6rem;
+        color: #e2e8f0;
+        vertical-align: middle;
+        border-bottom: 1px solid rgba(165, 180, 252, 0.12);
+    }
+
+    /* Member Cell */
+    .member-cell {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .gradient-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 6px 16px rgba(91, 33, 182, 0.35);
+        flex-shrink: 0;
+        margin-left:0.5rem;
+    }
+
+    .member-name {
+        flex-shrink: 0;
+        font-weight: 600;
+        font-size: 1.08rem;
+        color: #f1f5f9;
+    }
+
+    .member-id {
+        display: flex;
+        font-size: 0.86rem;
+        color: #94a3b8;
+    }
+
+    /* Mobile Cell */
+    .mobile-cell {
+        display: flex;
+        align-items: center;
+        color: #cbd5e1;
+        font-weight: 500;
+        font-size: 1.02rem;
+    }
+
+    /* Role Badge */
+    .role-badge {
+        padding: 7px 20px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        min-width: 110px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .role-admin {
+        background: linear-gradient(135deg, #ef4444, #f87171);
+        color: white;
+    }
+
+    .role-member {
+        background: linear-gradient(135deg, #10b981, #34d399);
+        color: white;
+    }
+
+    /* Action Buttons */
+    .action-group {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .btn-action {
+        width: 35px;
+        height: 35px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .btn-view {
+        background: rgba(59, 130, 246, 0.85);
+    }
+
+    .btn-edit {
+        background: rgba(245, 158, 11, 0.85);
+    }
+
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.85);
+    }
+
+    .btn-action:hover {
+        transform: translateY(-4px) scale(1.12);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 7rem 2rem;
+        color: #94a3b8;
+    }
+
+        .empty-state h4 {
+            color: #e2e8f0;
+            font-size: 1.6rem;
+            margin: 1.4rem 0 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+        }
+
+    /* Footer summary */
+    .table-footer {
+        padding: 1.2rem;
+        border-top: 1px solid rgba(165, 180, 252, 0.15);
+        background: rgba(15, 23, 42, 0.4);
+    }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .glass-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.5rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .admin-container {
+            padding: 1.5rem 1rem;
+        }
+
+        .glass-header {
+            padding: 1.8rem;
+        }
+
+        .admin-title {
+            font-size: 2rem;
+        }
+
+        .action-group {
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            width: 50px;
+            height: 50px;
+            font-size: 1.25rem;
+        }
+    }
+</style>
+
+<script>
+    // Initialize Bootstrap tooltips
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>

@@ -1,0 +1,165 @@
+﻿@model IEnumerable<SmartEventMVC.Models.Inquiry>
+
+@{
+    ViewData["Title"] = "My Inquiries";
+}
+
+<div class="my-inquiries-container">
+    <div class="header-section mb-5">
+        <h1 class="gradient-text">
+            <i class="fas fa-question-circle me-3"></i>My Inquiries
+        </h1>
+        <p class="">Track all your inquiries and responses</p>
+
+        <!-- Create New Inquiry Button -->
+        <div class="mt-4">
+            <a asp-action="Create" class="btn btn-primary me-2">
+                <i class="fas fa-plus me-2"></i>New Inquiry
+            </a>
+            <a asp-controller="Events" asp-action="Index" class="btn btn-outline-primary">
+                <i class="fas fa-calendar-alt me-2"></i>Browse Events
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="modern-card p-4">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-4x mb-3"></i>
+                <h4>No inquiries yet</h4>
+                <p class="text-muted mb-4">You haven't submitted any inquiries yet.</p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Submit Your First Inquiry
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="inquiry-card modern-card p-4 h-100 @(item.Status == "Pending" ? "pending" : "answered")">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="mb-1">
+                                        @if (item.Event != null)
+                                        {
+                                            @item.Event.Title
+                                        }
+                                        else
+                                        {
+                                            <text>General Inquiry</text>
+                                        }
+                                    </h5>
+                                    <small class="">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        @item.InquiryDate?.ToString("MM/dd/yyyy")
+                                    </small>
+                                </div>
+                                <div>
+                                    @if (item.Status == "Pending")
+                                    {
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-clock me-1"></i>Pending
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check me-1"></i>Answered
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="message-preview text-white mb-3">
+                                @if (item.Message.Length > 100)
+                                {
+                                    @item.Message.Substring(0, 100)
+                        
+                                    <text>...</text>
+                                }
+                                else
+                                {
+                                    @item.Message
+                                }
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <a asp-action="UserDetails" asp-route-id="@item.InquiryId"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+
+                                @if (item.Status == "Answered")
+                                {
+                                    <small class="text-success">
+                                        <i class="fas fa-reply me-1"></i>Replied
+                                    </small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .my-inquiries-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .gradient-text {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        font-size: 2.5rem;
+    }
+
+    .inquiry-card {
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+
+        .inquiry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .inquiry-card.pending {
+            border-left-color: #ffc107;
+        }
+
+        .inquiry-card.answered {
+            border-left-color: #198754;
+        }
+
+    .message-preview {
+        color: #666;
+        line-height: 1.5;
+        min-height: 60px;
+    }
+</style>

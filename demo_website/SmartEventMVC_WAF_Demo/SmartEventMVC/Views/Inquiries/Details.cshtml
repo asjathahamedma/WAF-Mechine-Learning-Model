@@ -1,0 +1,340 @@
+﻿@model SmartEventMVC.Models.Inquiry
+
+@{
+    ViewData["Title"] = "Inquiry Details";
+}
+
+<div class="inquiry-details-container">
+    <div class="header-section mb-5 text-center">
+        <h1 class="gradient-text display-5 fw-bold mb-3">
+            <i class="fas fa-eye me-3"></i>Inquiry Details
+        </h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item "><a asp-action="Index">Manage Inquiries</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Details</li>
+            </ol>
+        </nav>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert modern-alert success fade show mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert modern-alert danger fade show mb-4" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <!-- Left Column: User & Inquiry Info -->
+        <div class="col-lg-6">
+            <div class="glass-panel modern-card p-4 h-100">
+                <h4 class="mb-4 fw-semibold">
+                    <i class="fas fa-user-circle me-2"></i>User Information
+                </h4>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Name</span>
+                        <span class="info-value">@Model.Name</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Mobile</span>
+                        <span class="info-value">
+                            <i class="fas fa-phone-alt me-2 small"></i>@Model.Mobile
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Submitted</span>
+                        <span class="info-value">@Model.InquiryDate?.ToString("MMMM dd, yyyy • hh:mm tt")</span>
+                    </div>
+                    @if (Model.Event != null)
+                    {
+                        <div class="info-item">
+                            <span class="info-label">Related Event</span>
+                            <span class="info-value">
+                                <span class="status-pill teal">@Model.Event.Title</span>
+                            </span>
+                        </div>
+                    }
+                    <div class="info-item">
+                        <span class="info-label">Status</span>
+                        <span class="info-value">
+                            @if (Model.Status == "Pending")
+                            {
+                                <span class="status-pill warning">
+                                    <i class="fas fa-clock me-1"></i>Pending
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-pill success">
+                                    <i class="fas fa-check-circle me-1"></i>Answered
+                                </span>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Message -->
+        <div class="col-lg-6">
+            <div class="glass-panel modern-card p-4 h-100">
+                <h4 class="mb-4 fw-semibold">
+                    <i class="fas fa-comment-dots me-2"></i>Inquiry Message
+                </h4>
+                <div class="message-box p-4 rounded">
+                    @Model.Message
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Reply Section -->
+    <div class="glass-panel modern-card p-4 mt-4">
+        <h4 class="mb-4 fw-semibold">
+            <i class="fas fa-reply me-2"></i>Admin Reply
+        </h4>
+
+        @if (Model.Status == "Answered")
+        {
+            <div class="reply-display p-4 rounded">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h6 class="text-success fw-semibold mb-1">
+                            <i class="fas fa-check-circle me-2"></i>Answered
+                        </h6>
+                        <small class="">
+                            Replied by <strong>@Model.RepliedBy</strong> on
+                            @Model.ReplyDate?.ToString("MMMM dd, yyyy • hh:mm tt")
+                        </small>
+                    </div>
+                </div>
+                <div class="reply-content p-3">
+                    @Model.AdminReply
+                </div>
+            </div>
+        }
+        else
+        {
+            <form asp-action="Reply" method="post">
+                <input type="hidden" name="id" value="@Model.InquiryId" />
+                <div class="mb-4">
+                    <label class="form-label fw-medium">
+                        <i class="fas fa-edit me-2"></i>Your Reply
+                    </label>
+                    <textarea name="adminReply" class="form-control modern-textarea form-text" rows="6"
+                          placeholder="Type your detailed reply here..." required
+                          style="--placeholder-color: #cbd5e1;"></textarea>
+                    <div class="form-text mt-2">The user will receive this reply via their registered mobile or email (if configured).</div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <button type="submit" class="btn btn-success modern-btn">
+                        <i class="fas fa-paper-plane me-2"></i>Send Reply
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-light modern-btn">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.InquiryId" class="btn btn-outline-danger modern-btn ms-auto"
+                       onclick="return confirm('Are you sure you want to delete this inquiry?');">
+                        <i class="fas fa-trash me-2"></i>Delete Inquiry
+                    </a>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+<style>
+    .modern-textarea::placeholder,
+    .form-control::placeholder {
+        color: #cbd5e1 !important;
+        opacity: 0.85;
+        font-style: italic; /* optional – makes placeholder feel more subtle */
+    }
+    /* At the bottom of your <style> block */
+    .form-text {
+        color: #e2e8f0 !important;
+    }
+
+    .inquiry-details-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    .gradient-text {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .glass-panel {
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(165, 180, 252, 0.18);
+        border-radius: 20px;
+        box-shadow: 0 15px 40px -10px rgba(0,0,0,0.5);
+        overflow: hidden;
+    }
+
+    .modern-alert {
+        border-radius: 16px;
+        background: rgba(30,41,59,0.75);
+        backdrop-filter: blur(12px);
+        border: none;
+        color: #f1f5f9;
+    }
+
+        .modern-alert.success {
+            border-left: 5px solid #10b981;
+        }
+
+        .modern-alert.danger {
+            border-left: 5px solid #ef4444;
+        }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 1.25rem 2rem;
+        align-items: start;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-label {
+        font-size: 0.95rem;
+        color: #a5b4fc;
+        margin-bottom: 0.35rem;
+        font-weight: 500;
+    }
+
+    .info-value {
+        font-size: 1.05rem;
+        color: #e2e8f0;
+        font-weight: 400;
+    }
+
+    .message-box {
+        background: rgba(30,41,59,0.5);
+        border: 1px solid rgba(165,180,252,0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        min-height: 160px;
+        line-height: 1.7;
+        color: #f1f5f9;
+    }
+
+    .reply-display {
+        background: rgba(16,185,129,0.08);
+        border: 1px solid rgba(16,185,129,0.25);
+        border-radius: 12px;
+    }
+
+    .reply-content {
+        background: rgba(15,23,42,0.6);
+        border-radius: 10px;
+        padding: 1.25rem;
+        line-height: 1.7;
+        color: #e2e8f0;
+    }
+
+    .modern-textarea {
+        background: rgba(15,23,42,0.6);
+        border: 1px solid rgba(165,180,252,0.3);
+        color: #f1f5f9;
+        border-radius: 12px;
+        padding: 1rem;
+        resize: vertical;
+        min-height: 140px;
+        transition: all 0.3s;
+    }
+
+        .modern-textarea:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 4px rgba(168,85,247,0.15);
+            background: rgba(15,23,42,0.75);
+        }
+
+    .modern-btn {
+        padding: 0.65rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .modern-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+    .status-pill {
+        padding: 0.5em 1.1em;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+        .status-pill.teal {
+            background: rgba(20,184,166,0.2);
+            color: #2dd4bf;
+        }
+
+        .status-pill.muted {
+            background: rgba(148,163,184,0.2);
+            color: #cbd5e1;
+        }
+
+        .status-pill.warning {
+            background: rgba(245,158,11,0.2);
+            color: #fbbf24;
+        }
+
+        .status-pill.success {
+            background: rgba(16,185,129,0.2);
+            color: #34d399;
+        }
+
+    .action-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(30,41,59,0.6);
+        border: 1px solid rgba(165,180,252,0.25);
+        color: #cbd5e1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+        .action-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+    @@media (max-width: 992px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+    }
+</style>

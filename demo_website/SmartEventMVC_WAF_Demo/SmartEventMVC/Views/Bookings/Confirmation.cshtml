@@ -1,0 +1,51 @@
+﻿@model SmartEventMVC.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Confirmed";
+}
+
+<div class="container mt-5 text-center">
+    <div class="alert alert-success shadow">
+        <h2 class="mb-4">Booking Confirmed!</h2>
+        <p class="lead">Thank you for your booking. Your seats are reserved.</p>
+        <hr class="my-4" />
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <dl class="row text-start">
+                            <dt class="col-sm-4 fw-bold">Booking ID</dt>
+                            <dd class="col-sm-8">@Model.BookingId</dd>
+
+                            <dt class="col-sm-4 fw-bold">Event</dt>
+                            <dd class="col-sm-8">@(Model.Event?.Title ?? "N/A")</dd>
+
+                            <dt class="col-sm-4 fw-bold">Total Amount</dt>
+                            <dd class="col-sm-8">
+                                LKR @(Model.TotalAmount.HasValue? Model.TotalAmount.Value.ToString("N2") : "0.00")
+                            </dd>
+
+                            <dt class="col-sm-4 fw-bold">Payment Method</dt>
+                            <dd class="col-sm-8">@(Model.PaymentType ?? "N/A")</dd>
+
+                            <dt class="col-sm-4 fw-bold">Booking Date</dt>
+                            <dd class="col-sm-8">
+                                @(Model.BookingDate.HasValue? Model.BookingDate.Value.ToString("dd MMM yyyy HH:mm") : "N/A")
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg px-5">
+                Back to Home
+            </a>
+            <a asp-controller="Bookings" asp-action="Details" asp-route-id="@Model.BookingId" class="btn btn-outline-secondary btn-lg px-5 ms-3">
+                View Booking Details
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,463 @@
+﻿@model IEnumerable<SmartEventMVC.Models.Booking>
+
+@{
+    ViewData["Title"] = ViewBag.PageTitle ?? "Bookings";
+    var isAdmin = ViewBag.IsAdmin as bool? ?? false;
+}
+
+<div class="bookings-container">
+    <div class="bookings-header">
+        <div class="header-content">
+            <h1 class="bookings-title">
+                <i class="fas fa-ticket-alt me-3"></i>
+                Bookings Management            </h1>
+            <p class="bookings-subtitle">
+                @(isAdmin ? "Manage all bookings in the system" : "View your booking history")
+            </p>
+        </div>
+
+        @if (isAdmin)
+        {
+            <a asp-action="Create" class="btn-create-booking">
+                <i class="fas fa-plus-circle me-2"></i>Create Booking
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Events" asp-action="Index" class="btn-new-booking">
+                <i class="fas fa-calendar-plus me-2"></i>Book New Event
+            </a>
+        }
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="empty-bookings">
+            <div class="empty-content">
+                <i class="fas fa-ticket-alt fa-4x mb-4 text-white-50"></i>
+                <h3>No Bookings Found</h3>
+                <p class="text-white-50 mb-4">
+                    @(isAdmin ?
+                                    "There are no bookings in the system yet." :
+                                    "You haven't made any bookings yet.")
+                </p>
+                @if (isAdmin)
+                {
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Create First Booking
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Events" asp-action="Index"
+                       class="btn btn-primary">
+                        <i class="fas fa-calendar-alt me-2"></i>Browse Events
+                    </a>
+
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="bookings-grid">
+            @foreach (var item in Model)
+            {
+                <div class="booking-card">
+                    <div class="booking-header">
+                        <div class="booking-id">
+                            <span class="id-label">Booking ID:</span>
+                            <span class="id-value">#@item.BookingId</span>
+                        </div>
+                        <div class="booking-status">
+                            <span class="status-badge @(item.PaymentType == "Paid" ? "status-paid" : "status-pending")">
+                                @(item.PaymentType ?? "Pending")
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="booking-content">
+                        <div class="booking-info">
+                            <div class="info-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <div class="info-label">Event Date</div>
+                                    <div class="info-value">@(item.Event?.EventDate?.ToString("dd MMM yyyy") ?? "N/A")</div>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <div class="info-label">Total Amount</div>
+                                    <div class="info-value price">LKR @item.TotalAmount?.ToString("N2")</div>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fas fa-user"></i>
+                                <div>
+                                    <div class="info-label">Booked By</div>
+                                    <div class="info-value">@(item.Member?.Name ?? item.Member?.Mobile ?? "N/A")</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="booking-event">
+                            <h4 class="event-title">
+                                <i class="fas fa-star me-2"></i>
+                                @(item.Event?.Title ?? "Event")
+                            </h4>
+                            <p class="event-location">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                @(item.Event?.Location ?? "N/A")
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="booking-actions">
+                        <a asp-action="Details" asp-route-id="@item.BookingId"
+                           class="btn btn-view-details">
+                            <i class="fas fa-eye me-2"></i>View Details
+                        </a>
+
+                        @if (isAdmin || item.MemberId == Context.Session.GetInt32("MemberId"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.BookingId"
+                               class="btn btn-cancel-booking">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .bookings-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .bookings-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 15px;
+        color: white;
+    }
+
+    .header-content {
+        flex: 1;
+    }
+
+    .bookings-title {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+    }
+
+    .bookings-subtitle {
+        opacity: 0.9;
+        margin: 0.5rem 0 0 0;
+        font-size: 1.1rem;
+    }
+
+    .btn-create-booking, .btn-new-booking {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+        .btn-create-booking:hover, .btn-new-booking:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+    /* Alerts */
+    .alert {
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        animation: slideIn 0.5s ease;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        color: white;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #20c997, #3dd9ad);
+        color: white;
+    }
+
+    /* Bookings Grid */
+    .bookings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .booking-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid #e0e6ed;
+    }
+
+        .booking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+    .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-bottom: 1px solid #e0e6ed;
+    }
+
+    .booking-id {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .id-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .id-value {
+        background: #667eea;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-paid {
+        background: linear-gradient(135deg, #20c997, #3dd9ad);
+        color: white;
+    }
+
+    .status-pending {
+        background: linear-gradient(135deg, #ffc107, #ffd54f);
+        color: #333;
+    }
+
+    .booking-content {
+        padding: 1.5rem;
+    }
+
+    .booking-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e0e6ed;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .info-item i {
+            font-size: 1.5rem;
+            color: #667eea;
+            width: 30px;
+        }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 2px;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .price {
+        color: #28a745;
+        font-size: 1.1rem;
+    }
+
+    .booking-event {
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .event-title {
+        margin: 0 0 0.5rem 0;
+        color: #333;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .event-location {
+        margin: 0;
+        color: #666;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .booking-actions {
+        padding: 1.5rem;
+        border-top: 1px solid #e0e6ed;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-view-details {
+        flex: 1;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+        .btn-view-details:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+    .btn-cancel-booking {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+        .btn-cancel-booking:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            color: white;
+        }
+
+    /* Empty State */
+    .empty-bookings {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-content {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* Animations */
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .bookings-container {
+            padding: 1rem;
+        }
+
+        .bookings-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .bookings-title {
+            font-size: 1.5rem;
+        }
+
+        .bookings-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-info {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-actions {
+            flex-direction: column;
+        }
+    }
+</style>

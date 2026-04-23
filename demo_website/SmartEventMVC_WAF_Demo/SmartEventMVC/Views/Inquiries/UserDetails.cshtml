@@ -1,0 +1,223 @@
+﻿@model SmartEventMVC.Models.Inquiry
+
+@{
+    ViewData["Title"] = "Inquiry Details";
+}
+
+<div class="user-inquiry-details-container">
+    <div class="header-section mb-4">
+        <h1 class="gradient-text">
+            <i class="fas fa-eye me-3"></i>Inquiry Details
+        </h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="MyInquiries">My Inquiries</a></li>
+                <li class="breadcrumb-item active">Details</li>
+            </ol>
+        </nav>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Inquiry Details -->
+        <div class="col-lg-6">
+            <div class="modern-card p-4 mb-4">
+                <h4 class="mb-4">
+                    <i class="fas fa-info-circle me-2"></i>Inquiry Information
+                </h4>
+
+                <div class="info-group">
+                    <label class="info-label">Submitted On:</label>
+                    <div class="info-value">@Model.InquiryDate?.ToString("MMMM dd, yyyy hh:mm tt")</div>
+                </div>
+
+                @if (Model.Event != null)
+                {
+                    <div class="info-group">
+                        <label class="info-label">Related Event:</label>
+                        <div class="info-value">
+                            <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId"
+                               class="text-decoration-none">
+                                <span class="badge bg-info">@Model.Event.Title</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+
+                <div class="info-group">
+                    <label class="info-label">Status:</label>
+                    <div class="info-value">
+                        @if (Model.Status == "Pending")
+                        {
+                            <span class="badge bg-warning">
+                                <i class="fas fa-clock me-1"></i>Pending Review
+                            </span>
+                            <p class=" mt-2 mb-0">
+                                <small>
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Our team is reviewing your inquiry. We'll respond soon.
+                                </small>
+                            </p>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Answered
+                            </span>
+                            <p class=" mt-2 mb-0">
+                                <small>
+                                    <i class="fas fa-check-circle me-1"></i>
+                                    Replied on @Model.ReplyDate?.ToString("MMMM dd, yyyy")
+                                </small>
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Message -->
+        <div class="col-lg-6">
+            <div class="modern-card p-4 mb-4">
+                <h4 class="mb-4">
+                    <i class="fas fa-comment me-2"></i>Your Message
+                </h4>
+
+                <div class="message-box text-black-50">
+                    @Model.Message
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Reply Section -->
+    @if (Model.Status == "Answered" && !string.IsNullOrEmpty(Model.AdminReply))
+    {
+        <div class="modern-card p-4 mb-4">
+            <div class="d-flex align-items-center mb-4">
+                <div class="admin-icon me-3">
+                    <i class="fas fa-user-shield fa-2x text-white-50"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1">
+                        <i class="fas fa-reply me-2"></i>Admin Response
+                    </h4>
+                    <small class="corr">
+                        Replied by: @Model.RepliedBy on @Model.ReplyDate?.ToString("MMMM dd, yyyy hh:mm tt")
+                    </small>
+                </div>
+            </div>
+
+            <div class="admin-reply-box">
+                @Model.AdminReply
+            </div>
+        </div>
+    }
+
+    <div class="text-center mt-4">
+        <a asp-action="MyInquiries" class="btn btn-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back to My Inquiries
+        </a>
+        <a asp-action="Create" class="btn btn-outline-primary ms-2">
+            <i class="fas fa-plus me-2"></i>New Inquiry
+        </a>
+    </div>
+</div>
+
+<style>
+    .user-inquiry-details-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .gradient-text {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        font-size: 2.5rem;
+    }
+
+    .info-group {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        color: white;
+    }
+
+    .message-box {
+        background: #f8f9fa;
+        border: 1px solid #e0e6ed;
+        border-radius: 10px;
+        padding: 1.5rem;
+        min-height: 150px;
+        line-height: 1.6;
+    }
+
+    .admin-reply-box {
+        background: #e7f3ff;
+        border: 1px solid #b3d7ff;
+        border-radius: 10px;
+        padding: 1.5rem;
+        line-height: 1.6;
+        position: relative;
+        color:dimgrey;
+        
+    }
+
+    .admin-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+    }
+
+    .breadcrumb-item a {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+ .corr {
+        color: #667eea;
+ }
+</style>

